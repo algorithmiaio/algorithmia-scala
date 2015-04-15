@@ -23,7 +23,7 @@ object Sample {
         // Find the min and max of the factors
         val minmaxInput = compact(render(factorResult.result))
         println(s"MinMax with: $minmaxInput")
-        val minmaxOutput = minmax.pipe("[2,31]")
+        val minmaxOutput = minmax.pipe(minmaxInput)
         val minmaxResult = parse(factorOutput).extract[AlgorithmOutput[List[Int]]]
 
 
