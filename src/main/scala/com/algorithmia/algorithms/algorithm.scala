@@ -9,11 +9,14 @@ import org.json4s.native.JsonMethods._
 case class PipeIO(value: String, totalDuration: Double = 0) {
     implicit val formats = DefaultFormats
 
+    @throws(classOf[AlgorithmError])
     @throws(classOf[AlgorithmApiError])
     def |(that: Algorithm): PipeIO = {
         val raw = that.pipe(this.value)
-        val output = parse(raw).extract[AlgorithmOutput[JValue]]
-        PipeIO(compact(render(output.result)), this.totalDuration+output.duration)
+        parse(raw).extract[AlgorithmOutput[JValue]] match {
+            case JNothing => throw new AlgorithmError(raw)
+            case output => PipeIO(compact(render(output.result)), this.totalDuration+output.duration)
+        }
     }
 }
 
@@ -56,4 +59,5 @@ object Algorithm {
 case class AlgorithmOutput[T](result: T, duration: Double)
 
 case class AlgorithmParseException(algoUri :String) extends Exception(algoUri)
+case class AlgorithmError(message: String) extends Exception(message)
 case class AlgorithmApiError(body: String, code: Int) extends Exception(s"$code - $body")
