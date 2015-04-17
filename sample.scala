@@ -29,10 +29,10 @@ object Sample {
 
         println(s"Min and Max factors of ${factorInput}: ${minmaxResult.result}")
         println("----------")
-        println("Repeat  process with '|' syntax")
+        println("Repeat process with '|' syntax")
 
 
-        val output = PipeIO(factorInput) | factor | minmax
+        val output = factorInput | factor | minmax
         println(s"Pipe completed in ${output.totalDuration} seconds")
         println(s"Min and Max factors of ${factorInput}: ${output.value}")
     }
