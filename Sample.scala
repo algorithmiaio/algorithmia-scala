@@ -1,5 +1,5 @@
-import algorithmia.Algorithmia
-import algorithmia.algorithms._
+import com.algorithmia.Algorithmia
+import com.algorithmia.algo._
 
 import org.json4s._
 import org.json4s.JsonDSL._
@@ -9,10 +9,9 @@ object Sample {
     implicit val formats = DefaultFormats
 
     def main(args: Array[String]) = {
-        val service = Algorithmia(sys.env("ALGORITHMIA_API_KEY"))
-        val factor = service.algorithm("kenny/Factor/0.1.1")
-        val minmax = service.algorithm("codeb34v3r/FindMinMax/0.1.0")
-
+        val client = Algorithmia.client(sys.env("ALGORITHMIA_API_KEY"))
+        val factor = client.algo("kenny/Factor/0.1.1")
+        val minmax = client.algo("codeb34v3r/FindMinMax/0.1.0")
 
         // Factor an number
         val factorInput = "62"

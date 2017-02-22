@@ -1,12 +1,12 @@
-package algorithmia.algorithms
+package com.algorithmia.algo
 
-import algorithmia.{Algorithmia,Client}
+import com.algorithmia.{Algorithmia, AlgorithmiaClient}
 import scalaj.http._
 import scala.util.{Either, Left, Right}
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
-case class Algorithm(client: Client, username: String, algoname: String, version: Version) {
+case class Algorithm(client: AlgorithmiaClient, username: String, algoname: String, version: Version) {
     val algorithmBaseUrl = s"${Algorithmia.apiBaseUrl}/api"
 
     def toUrl: String = version match {
@@ -31,7 +31,7 @@ object Algorithm {
 
     @throws(classOf[AlgorithmParseException])
     @throws(classOf[VersionParseException])
-    def apply(client: Client, algoUri: String): Algorithm = {
+    def apply(client: AlgorithmiaClient, algoUri: String): Algorithm = {
         // TODO: strip algo:// prefix
         val (username, algoname, versionString) = algoUri.split("/") match {
             case Array(user, algo, ver) => (user, algo, ver)

@@ -1,2 +1,16 @@
+##
+##  Algorithmia .gitignore
+##
+
+
+## Ignore all dotfiles
+.*
+## except for .gitignore
+!.gitignore
+
+## SBT
 target
 project/target
+
+## Binaries
+*.class

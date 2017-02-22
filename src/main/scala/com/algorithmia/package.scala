@@ -1,6 +1,6 @@
-package algorithmia {
+package com.algorithmia {
 
-  package object algorithms {
+  package object algo {
     import scala.language.implicitConversions
 
     /** Implicitly convert string to PipeIO */
