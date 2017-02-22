@@ -8,7 +8,7 @@ class Algorithm(client: AlgorithmiaClient, algoUrl: String) {
 
   @throws(classOf[AlgorithmApiError])
   def pipe(data: String): AlgoResponse = {
-    val response = client.post(url, data)
+    val response = client.http.post(url, data)
 
     response.code match {
       // TODO: encode to map of duration:Double and result:Encodable
@@ -19,7 +19,7 @@ class Algorithm(client: AlgorithmiaClient, algoUrl: String) {
   }
 }
 
-case class AlgorithmOutput[T](result: T, duration: Double)
+case class AlgorithmOutput[T](result: T, metadata: Metadata)
 
-case class AlgorithmError(message: String) extends Exception(message)
-case class AlgorithmApiError(body: String, code: Int) extends Exception(s"$code - $body")
+class AlgorithmError(message: String) extends Exception(message)
+class AlgorithmApiError(body: String, code: Int) extends Exception(s"$code - $body")

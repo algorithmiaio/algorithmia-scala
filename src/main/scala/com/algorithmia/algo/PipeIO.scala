@@ -13,7 +13,7 @@ case class PipeIO(value: String, totalDuration: Double = 0) {
       case AlgoSuccess(raw) => {
         parse(raw).extract[AlgorithmOutput[JValue]] match {
           case JNothing => throw new AlgorithmError(raw)
-          case output => PipeIO(compact(render(output.result)), this.totalDuration+output.duration)
+          case output => PipeIO(compact(render(output.result)), this.totalDuration + output.metadata.duration)
         }
       }
       case AlgoFailure(message) => throw new AlgorithmError(message)

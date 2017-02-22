@@ -1,3 +1,7 @@
 package com.algorithmia.algo
 
-case class Metadata(duration: Double, contentType: String, stdout: Option[String])
+case class Metadata(
+  duration: Double,
+  content_type: String,
+  stdout: Option[String]
+)

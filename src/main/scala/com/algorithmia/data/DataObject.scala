@@ -17,11 +17,11 @@ abstract class DataObject(client: AlgorithmiaClient, dataUrl: String, objectType
   // Abstract methods
   def exists: Boolean
 
-  def getName(): String = {
+  def getName: String = {
   	trimmedPath.substring(trimmedPath.lastIndexOf("/") + 1)
   }
 
-  def getParent(): DataDirectory = {
+  def getParent: DataDirectory = {
     new DataDirectory(client, trimmedPath.replaceFirst("/[^/]+$", ""))
   }
 
