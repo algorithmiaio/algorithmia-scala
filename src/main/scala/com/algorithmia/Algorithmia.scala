@@ -1,6 +1,7 @@
 package com.algorithmia
 
 import com.algorithmia.algo._
+import com.algorithmia.data._
 
 object Algorithmia {
   val apiBaseUrl: String = "https://api.algorithmia.com"
@@ -9,6 +10,9 @@ object Algorithmia {
 
   def client(simpleKey: String): AlgorithmiaClient = AlgorithmiaClient(Some(simpleKey))
 
-  def algo(algoUri: String): Algorithm = Algorithm(defaultClient, algoUri)
+  // Helper methods using the default client:
+  def algo(algoUrl: String): Algorithm = defaultClient.algo(algoUrl)
+  def dir(dataUrl: String): DataDirectory = defaultClient.dir(dataUrl)
+  def file(dataUrl: String): DataFile = defaultClient.file(dataUrl)
 
 }

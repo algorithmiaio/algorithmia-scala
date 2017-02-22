@@ -1,6 +1,7 @@
 package com.algorithmia.data
 
 import com.algorithmia._
+import java.net.URLEncoder
 
 sealed trait DataObjectType
 case object DataFileType extends DataObjectType
@@ -10,6 +11,8 @@ abstract class DataObject(client: AlgorithmiaClient, dataUrl: String, objectType
 
   val path = dataUrl.replaceAll("^data://|^/", "")
   val trimmedPath = if(path.endsWith("/")) path.dropRight(1) else path
+
+  val url = Algorithmia.apiBaseUrl + "/v1/data/" + URLEncoder.encode(path, "UTF-8")
 
   // Abstract methods
   def exists: Boolean

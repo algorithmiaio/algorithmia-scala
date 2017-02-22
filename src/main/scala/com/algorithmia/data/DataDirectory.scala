@@ -6,7 +6,7 @@ import java.io.File
 class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObject(client, dataUrl, DataDirectoryType) {
 
   override def exists: Boolean = {
-    ??? // TODO
+    client.head(url).code == 200
   }
 
   def file(filename: String): DataFile = {
@@ -17,6 +17,14 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
   	val dataFile = new DataFile(client, trimmedPath + "/" + file.getName)
   	dataFile.put(file)
   	dataFile
+  }
+
+  def delete(forceDelete: Boolean): Unit = {
+    client.delete(s"$url?force=$forceDelete")
+  }
+
+  def getPermissions(): DataAcl = {
+  	??? // TODO
   }
 
 }

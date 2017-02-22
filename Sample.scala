@@ -16,7 +16,7 @@ object Sample {
         // Factor an number
         val factorInput = "62"
         println(s"Factoring with: $factorInput")
-        val factorOutput = factor.pipe(factorInput)
+        val factorOutput = factor.pipe(factorInput).map(_.result).get
         val factorResult = parse(factorOutput).extract[AlgorithmOutput[List[Int]]]
 
         // Find the min and max of the factors

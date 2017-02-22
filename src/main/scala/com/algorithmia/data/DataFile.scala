@@ -6,11 +6,15 @@ import java.io.File
 class DataFile(client: AlgorithmiaClient, dataUrl: String) extends DataObject(client, dataUrl, DataFileType) {
 
   override def exists: Boolean = {
-    ??? // TODO
+    client.head(url).code == 200
   }
 
   def getFile(): File = {
     ??? // TODO
+  }
+
+  def put(data: String): Unit = {
+    client.put(url, data)
   }
 
   def put(file: File): Unit = {
@@ -18,7 +22,7 @@ class DataFile(client: AlgorithmiaClient, dataUrl: String) extends DataObject(cl
   }
 
   def delete(): Unit = {
-    ??? // TODO
+    client.delete(url)
   }
 
 }

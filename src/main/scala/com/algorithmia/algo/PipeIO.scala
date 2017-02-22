@@ -9,10 +9,14 @@ case class PipeIO(value: String, totalDuration: Double = 0) {
   @throws(classOf[AlgorithmError])
   @throws(classOf[AlgorithmApiError])
   def |(that: Algorithm): PipeIO = {
-    val raw = that.pipe(this.value)
-    parse(raw).extract[AlgorithmOutput[JValue]] match {
-      case JNothing => throw new AlgorithmError(raw)
-      case output => PipeIO(compact(render(output.result)), this.totalDuration+output.duration)
+    that.pipe(this.value) match {
+      case AlgoSuccess(raw) => {
+        parse(raw).extract[AlgorithmOutput[JValue]] match {
+          case JNothing => throw new AlgorithmError(raw)
+          case output => PipeIO(compact(render(output.result)), this.totalDuration+output.duration)
+        }
+      }
+      case AlgoFailure(message) => throw new AlgorithmError(message)
     }
   }
 }
