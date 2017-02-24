@@ -4,19 +4,19 @@ import org.json4s._
 import org.json4s.native.JsonMethods._
 
 case class PipeIO(value: String, totalDuration: Double = 0) {
-  implicit val formats = DefaultFormats
+  private implicit val formats = DefaultFormats
 
   @throws(classOf[AlgorithmError])
   @throws(classOf[AlgorithmApiError])
   def |(that: Algorithm): PipeIO = {
     that.pipe(this.value) match {
-      case AlgoSuccess(raw) => {
-        parse(raw).extract[AlgorithmOutput[JValue]] match {
-          case JNothing => throw new AlgorithmError(raw)
-          case output => PipeIO(compact(render(output.result)), this.totalDuration + output.metadata.duration)
+      case AlgoSuccess(result, metadata) => {
+        result.extractOpt[AlgorithmOutput[JValue]] match {
+          case Some(output) => PipeIO(compact(render(output.result)), this.totalDuration + output.metadata.duration)
+          case None => throw new AlgorithmError(result.toString)
         }
       }
-      case AlgoFailure(message) => throw new AlgorithmError(message)
+      case AlgoFailure(message, metadata) => throw new AlgorithmError(message)
     }
   }
 }

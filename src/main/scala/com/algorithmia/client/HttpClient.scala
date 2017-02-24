@@ -1,8 +1,7 @@
 package com.algorithmia.client
 
-import com.algorithmia.data._
-import com.algorithmia.AlgorithmiaClient
 import java.io.InputStream
+import org.json4s.JValue
 import scalaj.http._
 
 class HttpClient(apiKey: Option[String]) {
@@ -74,8 +73,15 @@ class HttpClient(apiKey: Option[String]) {
   }
 
   // PATCH
-  def patch(url: String, data: String): HttpResponse[String] = {
-  	??? // TODO
+  def patch(url: String, data: JValue): HttpResponse[String] = {
+    Http(url)
+      .method("PATCH")
+      .header("Content-Type", "application/json")
+      .header("User-Agent", userAgent)
+      .header("Authorization", apiKey.orNull)
+      .header("Accept","application/json")
+      .option(HttpOptions.connTimeout(60000))
+      .asString
   }
 
 }

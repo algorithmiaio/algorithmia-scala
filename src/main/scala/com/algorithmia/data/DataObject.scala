@@ -9,10 +9,10 @@ case object DataDirectoryType extends DataObjectType
 
 abstract class DataObject(client: AlgorithmiaClient, dataUrl: String, objectType: DataObjectType) {
 
-  val path = dataUrl.replaceAll("^data://|^/", "")
-  val trimmedPath = if(path.endsWith("/")) path.dropRight(1) else path
+  val path: String = dataUrl.replaceAll("^data://|^/", "")
+  val trimmedPath: String = if(path.endsWith("/")) path.dropRight(1) else path
 
-  val url = Algorithmia.apiBaseUrl + "/v1/data/" + URLEncoder.encode(path, "UTF-8")
+  val url: String = Algorithmia.apiBaseUrl + "/v1/data/" + URLEncoder.encode(path, "UTF-8")
 
   // Abstract methods
   def exists: Boolean

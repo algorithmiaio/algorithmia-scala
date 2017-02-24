@@ -17,13 +17,13 @@ object Sample {
         val factorInput = "62"
         println(s"Factoring with: $factorInput")
         val factorOutput = factor.pipe(factorInput).map(_.result).get
-        val factorResult = parse(factorOutput).extract[AlgorithmOutput[List[Int]]]
+        val factorResult = factorOutput.extract[AlgorithmOutput[List[Int]]]
 
         // Find the min and max of the factors
         val minmaxInput = compact(render(factorResult.result))
         println(s"MinMax with: $minmaxInput")
         val minmaxOutput = minmax.pipe(minmaxInput)
-        val minmaxResult = parse(factorOutput).extract[AlgorithmOutput[List[Int]]]
+        val minmaxResult = factorOutput.extract[AlgorithmOutput[List[Int]]]
 
 
         println(s"Min and Max factors of ${factorInput}: ${minmaxResult.result}")
