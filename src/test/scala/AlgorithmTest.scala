@@ -25,7 +25,7 @@ class AlgorithmTest {
     Assert.assertEquals("42", output)
     val result = res.as[Int]
     Assert.assertEquals(42, result)
-    Assert.assertEquals(ContentType.Json, res.metadata.getContentType())
+    Assert.assertEquals(ContentType.Json, res.metadata.content_type)
   }
 
   @Test
@@ -35,7 +35,7 @@ class AlgorithmTest {
     Assert.assertEquals("\"Hello foo\"", res.asJsonString())
     Assert.assertEquals("Hello foo", res.as(new TypeToken<String>(){}))
     Assert.assertEquals("Hello foo", res.asString())
-    Assert.assertEquals(ContentType.Text, res.metadata.getContentType())
+    Assert.assertEquals(ContentType.Text, res.metadata.content_type)
   }
 
   @Test
@@ -44,7 +44,7 @@ class AlgorithmTest {
     val res = Algorithmia.client(key).algo("docs/JavaBinaryInAndOut").pipe(input)
     val output = res.as[Array[Byte]]
     Assert.assertEquals(Base64.encodeBase64String(input),Base64.encodeBase64String(output))
-    Assert.assertEquals(ContentType.Binary, res.metadata.getContentType())
+    Assert.assertEquals(ContentType.Binary, res.metadata.content_type)
   }
 
   @Test

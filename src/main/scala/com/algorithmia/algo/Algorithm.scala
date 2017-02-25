@@ -13,14 +13,11 @@ class Algorithm(client: AlgorithmiaClient, algoUrl: String, options: Map[String,
   @throws(classOf[AlgorithmApiError])
   def pipe(input: Any): AlgoResponse = {
     val inputJson = new Json(DefaultFormats).decompose(input)
-    val response = client.http.post(url, inputJson.toString)
+    val httpResponse = client.http.post(url, inputJson.toString)
 
-    val metadata = ??? // TODO
-    response.code match {
-      // TODO: encode to map of duration:Double and result:Encodable
-      case 200 => AlgoSuccess(parse(response.body), metadata)
-      // TODO: better/userful errors
-      case _ => AlgoFailure(response.body, metadata)
+    httpResponse.code match {
+      case 200 => AlgoResponse.fromJson(parse(httpResponse.body))
+      case _ => AlgoFailure(httpResponse.body, Metadata(0, ContentTypeVoid.content_type, None))
     }
   }
 
