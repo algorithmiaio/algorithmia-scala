@@ -23,6 +23,8 @@ class AlgorithmTest {
     val res = Algorithmia.client(key).algo("docs/JavaAddOne").pipe(41)
     val output = res.map(_.result).getOrElse("")
     Assert.assertEquals("42", output)
+
+    import org.json4s.DefaultReaders._
     val result = res.as[Int]
     Assert.assertEquals(42, result)
     Assert.assertEquals(ContentType.Json, res.metadata.content_type)
