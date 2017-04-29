@@ -2,7 +2,7 @@ import java.io._
 import java.util.Scanner
 import com.algorithmia.Algorithmia
 import com.algorithmia.data._
-import org.junit.{Assert, Test}
+import org.junit.Assert
 import org.specs2.mutable._
 
 abstract class DataFileGenericTest extends Specification {

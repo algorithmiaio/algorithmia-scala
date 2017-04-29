@@ -27,6 +27,14 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
     new DataFile(client, trimmedPath + "/" + filename)
   }
 
+  def files: Iterable[DataFile] = {
+    List.empty // TODO
+  }
+
+  def dirs: Iterable[DataFile] = {
+    List.empty // TODO
+  }
+
   def putFile(file: File): DataFile = {
     val dataFile = new DataFile(client, trimmedPath + "/" + file.getName)
     dataFile.put(file)
@@ -38,7 +46,7 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
   }
 
   case class DirectoryListResponse(acl: DataAcl)
-  def getPermissions(): DataAcl = {
+  def getPermissions: DataAcl = {
     // To get permissions, list the directory and extract the acl field
     val response = client.http.get(url + "?acl=true").body
     val listing = parse(response).extract[DirectoryListResponse]
