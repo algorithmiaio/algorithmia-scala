@@ -1,6 +1,7 @@
 import com.algorithmia.Algorithmia
 import com.algorithmia.algo._
 import org.apache.commons.codec.binary.Base64
+import org.json4s.DefaultReaders._
 import org.junit.Before
 import org.junit.Test
 import org.junit.Assume
@@ -24,20 +25,16 @@ class AlgorithmTest {
     val output = res.map(_.result).getOrElse("")
     Assert.assertEquals("42", output)
 
-    import org.json4s.DefaultReaders._
     val result = res.as[Int]
     Assert.assertEquals(42, result)
-    Assert.assertEquals(ContentType.Json, res.metadata.content_type)
+    Assert.assertEquals(ContentTypeJson, res.metadata.content_type)
   }
 
   @Test
   def algorithmPipeText() = {
     val res = Algorithmia.client(key).algo("demo/Hello").pipe("foo")
-    Assert.assertEquals("\"Hello foo\"", res.as(new TypeToken<JsonElement>(){}).toString())
-    Assert.assertEquals("\"Hello foo\"", res.asJsonString())
-    Assert.assertEquals("Hello foo", res.as(new TypeToken<String>(){}))
-    Assert.assertEquals("Hello foo", res.asString())
-    Assert.assertEquals(ContentType.Text, res.metadata.content_type)
+    Assert.assertEquals("Hello foo", res.as[String])
+    Assert.assertEquals(ContentTypeText, res.metadata.content_type)
   }
 
   @Test
@@ -46,32 +43,24 @@ class AlgorithmTest {
     val res = Algorithmia.client(key).algo("docs/JavaBinaryInAndOut").pipe(input)
     val output = res.as[Array[Byte]]
     Assert.assertEquals(Base64.encodeBase64String(input),Base64.encodeBase64String(output))
-    Assert.assertEquals(ContentType.Binary, res.metadata.content_type)
+    Assert.assertEquals(ContentTypeBinary, res.metadata.content_type)
   }
 
-  @Test
-  def algorithmRawOutput() = {
-    val res = Algorithmia.client(key).algo("demo/Hello")
-        .setOutputType(OutputRaw).pipe("foo")
-    Assert.assertEquals("Hello foo", res.getRawOutput())
-    Assert.assertEquals(null, res.metadata)
-  }
-
-  @Test
-  def algorithmVoidOutput() = {
-    val res = Algorithmia.client(key).algo("demo/Hello")
-      .setOutputType(OutputVoid).pipe("foo")
-      .getAsyncResponse()
-    Assert.assertEquals("void", res.getAsyncProtocol())
-    Assert.assertTrue(res.getRequestId() != null)  // request is unpredictable, but should be *something*
-  }
+  // @Test
+  // def algorithmVoidOutput() = {
+  //   val res = Algorithmia.client(key).algo("demo/Hello")
+  //     .setOutputType(OutputVoid)
+  //     .pipe("foo")
+  //   Assert.assertEquals("void", res.getAsyncProtocol())
+  //   Assert.assertTrue(res.getRequestId() != null)  // request is unpredictable, but should be *something*
+  // }
 
   @Test
   def algorithmSetOption() = {
     val res = Algorithmia.client(key).algo("demo/Hello")
       .setOptions("output" -> "raw").pipe("foo")
 
-    Assert.assertEquals("Hello foo", res.getRawOutput())
+    Assert.assertEquals("Hello foo", res.rawOutput)
   }
 
   @Test
@@ -79,7 +68,7 @@ class AlgorithmTest {
     val res = Algorithmia.client(key).algo("demo/Hello")
       .setOptions("output" -> "raw").pipe("foo")
 
-    Assert.assertEquals("Hello foo", res.getRawOutput())
+    Assert.assertEquals("Hello foo", res.rawOutput)
 
   }
 
@@ -93,7 +82,7 @@ class AlgorithmTest {
     Assert.assertEquals(300L, algo.timeout)
 
     // Check Minute conversion
-    algo = algo.setTimeout(20L, TimeUnit.MINUTES)
+    algo = algo.setTimeout(Duration(20, MINUTES))
     Assert.assertEquals(20L * 60L, algo.timeout)
 
     // And seconds just in case
@@ -101,7 +90,7 @@ class AlgorithmTest {
     Assert.assertEquals(30L, algo.timeout)
 
     // And milliseconds
-    algo = algo.setTimeout(5000L, TimeUnit.MILLISECONDS)
+    algo = algo.setTimeout(Duration(5000, MILLISECONDS))
     Assert.assertEquals(5L, algo.timeout)
   }
 }
