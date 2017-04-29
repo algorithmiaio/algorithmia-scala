@@ -8,42 +8,54 @@ import org.junit.Assume
 import org.junit.Assert
 import java.util.concurrent._
 import scala.concurrent.duration._
+import org.specs2.mutable._
 
-class AlgorithmTest {
+object AlgorithmSpec extends Specification {
 
-  private var key: String = null
+  private val key: String = System.getenv("ALGORITHMIA_API_KEY")
 
-  @Before
-  def setup() = {
-    key = System.getenv("ALGORITHMIA_API_KEY")
-    Assume.assumeNotNull(key)
+  "api key" should {
+    "define environment variable ALGORITHMIA_API_KEY" in {
+      key must not beNull
+    }
   }
 
-  @Test
-  def algorithmPipeJson() = {
-    val res = Algorithmia.client(key).algo("docs/JavaAddOne").pipe(41)
-    val output = res.map(_.result).getOrElse("")
-    Assert.assertEquals("42", output)
+  "Algorithm.pipe(Int)" should {
+    val client = Algorithmia.client(key)
+    val res = client.algo("docs/JavaAddOne").pipe(41)
 
-    val result = res.as[Int]
-    Assert.assertEquals(42, result)
-    Assert.assertEquals(ContentTypeJson, res.metadata.content_type)
+    "output result 42" in {
+      val output = res.map(_.result).getOrElse("")
+      output mustEqual "42"
+    }
+
+    "parse result 42" in {
+      val result = res.as[Int]
+      result mustEqual 42
+      res.metadata.content_type.content_type mustEqual ContentTypeJson.content_type
+    }
   }
 
-  @Test
-  def algorithmPipeText() = {
-    val res = Algorithmia.client(key).algo("demo/Hello").pipe("foo")
-    Assert.assertEquals("Hello foo", res.as[String])
-    Assert.assertEquals(ContentTypeText, res.metadata.content_type)
+  "Algorithm.pipe(String)" should {
+    val client = Algorithmia.client(key)
+    val res = client.algo("demo/Hello").pipe("foo")
+
+    "parse result string" in {
+      res.as[String] mustEqual "Hello foo"
+      res.metadata.content_type.content_type mustEqual ContentTypeText.content_type
+    }
   }
 
-  @Test
-  def algorithmPipeBinary() = {
+  "Algorithm.pipe(ByteArray)" should {
     val input = new Array[Byte](10)
-    val res = Algorithmia.client(key).algo("docs/JavaBinaryInAndOut").pipe(input)
-    val output = res.as[Array[Byte]]
-    Assert.assertEquals(Base64.encodeBase64String(input),Base64.encodeBase64String(output))
-    Assert.assertEquals(ContentTypeBinary, res.metadata.content_type)
+    val client = Algorithmia.client(key)
+    val res = client.algo("docs/JavaBinaryInAndOut").pipe(input)
+
+    "parse result base64" in {
+      val output = res.as[Array[Byte]]
+      Base64.encodeBase64String(input) mustEqual Base64.encodeBase64String(output)
+      res.metadata.content_type.content_type mustEqual ContentTypeBinary.content_type
+    }
   }
 
   // @Test
@@ -55,42 +67,41 @@ class AlgorithmTest {
   //   Assert.assertTrue(res.getRequestId() != null)  // request is unpredictable, but should be *something*
   // }
 
-  @Test
-  def algorithmSetOption() = {
-    val res = Algorithmia.client(key).algo("demo/Hello")
-      .setOptions("output" -> "raw").pipe("foo")
+  "Algorithm.setOptions" should {
+    val client = Algorithmia.client(key)
+    var algo = client.algo("demo/Hello")
 
-    Assert.assertEquals("Hello foo", res.rawOutput)
+    "set option" in {
+      algo = algo.withOptions("foo" -> "bar")
+      algo.options("foo") mustEqual "bar"
+    }
   }
 
-  @Test
-  def algorithmSetOptions() = {
-    val res = Algorithmia.client(key).algo("demo/Hello")
-      .setOptions("output" -> "raw").pipe("foo")
+  "Algorithm.timeout" should {
+    val client = Algorithmia.client(key)
 
-    Assert.assertEquals("Hello foo", res.rawOutput)
+    "default timeout" in {
+      val algo = client.algo("docs/JavaAddOne")
+      // Check default timeout - just for fun. This doesn't have to be specified at all time
+      // but I wanted to make sure this method never throws an exception when the key in the options
+      // is null.
+      algo.timeout must beNone
+    }
 
+    "set timeout" in {
+      var algo = client.algo("docs/JavaAddOne")
+      // Check Minute conversion
+      algo = algo.withTimeout(Duration(20, MINUTES))
+      algo.timeout mustEqual 20 * 60
+
+      // And seconds just in case
+      algo = algo.withTimeout(Duration(30, SECONDS))
+      algo.timeout mustEqual 30
+
+      // And milliseconds
+      algo = algo.withTimeout(Duration(5000, MILLISECONDS))
+      algo.timeout mustEqual 5
+    }
   }
 
-  @Test
-  def algorithmCheckTimeout() = {
-    var algo: Algorithm = Algorithmia.client(key).algo("docs/JavaAddOne")
-
-    // Check default timeout - just for fun. This doesn't have to be specified at all time
-    // but I wanted to make sure this method never throws an exception when the key in the options
-    // is null.
-    Assert.assertEquals(300L, algo.timeout)
-
-    // Check Minute conversion
-    algo = algo.setTimeout(Duration(20, MINUTES))
-    Assert.assertEquals(20L * 60L, algo.timeout)
-
-    // And seconds just in case
-    algo = algo.setTimeout(Duration(30, SECONDS))
-    Assert.assertEquals(30L, algo.timeout)
-
-    // And milliseconds
-    algo = algo.setTimeout(Duration(5000, MILLISECONDS))
-    Assert.assertEquals(5L, algo.timeout)
-  }
 }

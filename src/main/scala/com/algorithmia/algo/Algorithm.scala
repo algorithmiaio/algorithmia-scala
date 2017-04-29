@@ -7,7 +7,7 @@ import org.json4s.native.Json
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.{Duration, FiniteDuration, SECONDS}
 
-class Algorithm(client: AlgorithmiaClient, algoUrl: String, options: Map[String,String] = Map.empty) {
+class Algorithm(client: AlgorithmiaClient, algoUrl: String, val options: Map[String,String] = Map.empty) {
   private val trimmedPath: String = algoUrl.replaceAll("^algo://|^/", "")
   val url: String = Algorithmia.apiBaseUrl + "/v1/algo/" + trimmedPath
 
@@ -19,29 +19,30 @@ class Algorithm(client: AlgorithmiaClient, algoUrl: String, options: Map[String,
 
     httpResponse.code match {
       case 200 => AlgoResponse(rawOutput, outputType)
-      case _ => AlgoFailure(rawOutput, Metadata(0, ContentTypeVoid.content_type, None), rawOutput)
+      case _ => AlgoFailure(rawOutput, Metadata(0, ContentTypeVoid, None), rawOutput)
     }
   }
 
   /**
-   * Set algorithm options, to be passed into algorithmia as query parameters
+   * Set algorithm options, to be passed into algorithmia as query parameters.
+   * We use "with" instead of "set" because the Algorithm object is immutable.
    */
-  def setOptions(opts: (String,String)*): Algorithm = {
+  def withOptions(opts: (String,String)*): Algorithm = {
     new Algorithm(client, algoUrl, options ++ opts)
   }
 
   def timeout: Option[FiniteDuration] = {
     options.get("timeout").map(sec => Duration(sec.toLong, SECONDS))
   }
-  def setTimeout(timeout: FiniteDuration): Algorithm = {
-    setOptions("timeout" -> timeout.toSeconds.toString)
+  def withTimeout(timeout: FiniteDuration): Algorithm = {
+    withOptions("timeout" -> timeout.toSeconds.toString)
   }
 
   def outputType: AlgorithmOutputType = {
     options.get("output").map(AlgorithmOutputType.fromString).getOrElse(OutputDefault)
   }
-  def setOutputType(outputType: AlgorithmOutputType): Algorithm = {
-    setOptions("output" -> outputType.parameter)
+  def withOutputType(outputType: AlgorithmOutputType): Algorithm = {
+    withOptions("output" -> outputType.parameter)
   }
 
 }
