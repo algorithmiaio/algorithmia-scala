@@ -1,7 +1,6 @@
 import com.algorithmia.Algorithmia
 import com.algorithmia.data._
 import java.util
-import org.junit.Test
 import org.specs2.mutable.Specification
 
 abstract class DataDirectoryGenericTest extends Specification {

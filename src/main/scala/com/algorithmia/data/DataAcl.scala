@@ -1,8 +1,9 @@
 package com.algorithmia.data
 
-case class DataAcl(read: List[String]) {
+case class DataAcl(read: DataAclType)
 
-  // TODO:
-  // def readPermissions: DataAclType = DataAclType.fromString(read)
+sealed trait DataAclType
 
-}
+case object DataPublic extends DataAclType
+case object DataMyAlgorithms extends DataAclType
+case object DataPrivate extends DataAclType
