@@ -40,8 +40,8 @@ object AlgoResponse {
   def apply(rawOutput: String, outputType: AlgorithmOutputType): AlgoResponse = {
     val json = parse(rawOutput)
     json.extract[AlgoResponseRaw] match {
-      case AlgoResponseRaw(_, Some(error), metadata) => AlgoFailure(error.message, metadata, rawOutput)
-      case AlgoResponseRaw(result, None, metadata) => AlgoSuccess(result, metadata, rawOutput)
+      case AlgoResponseRaw(_, Some(error), metadata) => AlgoFailure(error.message, metadata.metadata, rawOutput)
+      case AlgoResponseRaw(result, None, metadata) => AlgoSuccess(result, metadata.metadata, rawOutput)
     }
   }
 
@@ -51,8 +51,17 @@ object AlgoResponse {
   private case class AlgoResponseRaw(
     result: JValue,
     error: Option[AlgoResponseError],
-    metadata: Metadata
+    metadata: AlgoResponseMetadata
   )
   private case class AlgoResponseError(message: String)
+  private case class AlgoResponseMetadata(
+    duration: Double,
+    content_type: String,
+    stdout: Option[String]
+  ) {
+    def metadata: Metadata = Metadata(
+      duration, ContentType(content_type), stdout
+    )
+  }
 
 }

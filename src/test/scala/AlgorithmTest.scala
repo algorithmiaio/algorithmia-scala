@@ -1,12 +1,9 @@
 import com.algorithmia.Algorithmia
 import com.algorithmia.algo._
 import org.apache.commons.codec.binary.Base64
+import org.json4s._
 import org.json4s.DefaultReaders._
-import org.junit.Before
-import org.junit.Test
-import org.junit.Assume
-import org.junit.Assert
-import java.util.concurrent._
+import org.json4s.native.JsonMethods._
 import scala.concurrent.duration._
 import org.specs2.mutable._
 
@@ -22,14 +19,15 @@ object AlgorithmSpec extends Specification {
 
   "Algorithm.pipe(Int)" should {
     val client = Algorithmia.client(key)
-    val res = client.algo("docs/JavaAddOne").pipe(41)
 
     "output result 42" in {
-      val output = res.map(_.result).getOrElse("")
+      val res = client.algo("docs/JavaAddOne").pipe(41)
+      val output: String = res.map(a => compact(render(a.result))).getOrElse("")
       output mustEqual "42"
     }
 
     "parse result 42" in {
+      val res = client.algo("docs/JavaAddOne").pipe(41)
       val result = res.as[Int]
       result mustEqual 42
       res.metadata.content_type.content_type mustEqual ContentTypeJson.content_type
@@ -52,7 +50,15 @@ object AlgorithmSpec extends Specification {
     val res = client.algo("docs/JavaBinaryInAndOut").pipe(input)
 
     "parse result base64" in {
+      val output = res.as[String]
+      input mustEqual Base64.decodeBase64(output)
+      Base64.encodeBase64String(input) mustEqual output
+      res.metadata.content_type.content_type mustEqual ContentTypeBinary.content_type
+    }
+
+    "parse result byte array" in {
       val output = res.as[Array[Byte]]
+      input mustEqual output
       Base64.encodeBase64String(input) mustEqual Base64.encodeBase64String(output)
       res.metadata.content_type.content_type mustEqual ContentTypeBinary.content_type
     }
@@ -92,15 +98,18 @@ object AlgorithmSpec extends Specification {
       var algo = client.algo("docs/JavaAddOne")
       // Check Minute conversion
       algo = algo.withTimeout(Duration(20, MINUTES))
-      algo.timeout mustEqual 20 * 60
+      algo.timeout must beSome(Duration(20, MINUTES))
+      algo.options("timeout") mustEqual "1200"
 
       // And seconds just in case
       algo = algo.withTimeout(Duration(30, SECONDS))
-      algo.timeout mustEqual 30
+      algo.timeout must beSome(Duration(0.5, MINUTES))
+      algo.options("timeout") mustEqual "30"
 
       // And milliseconds
       algo = algo.withTimeout(Duration(5000, MILLISECONDS))
-      algo.timeout mustEqual 5
+      algo.timeout must beSome(Duration(5, SECONDS))
+      algo.options("timeout") mustEqual "5"
     }
   }
 

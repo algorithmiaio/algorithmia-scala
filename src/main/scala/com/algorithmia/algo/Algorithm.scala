@@ -11,12 +11,14 @@ class Algorithm(client: AlgorithmiaClient, algoUrl: String, val options: Map[Str
   private val trimmedPath: String = algoUrl.replaceAll("^algo://|^/", "")
   val url: String = Algorithmia.apiBaseUrl + "/v1/algo/" + trimmedPath
 
+  val json = new Json(DefaultFormats)
+
   @throws(classOf[AlgorithmApiError])
   def pipe(input: Any): AlgoResponse = {
-    val inputJson = new Json(DefaultFormats).decompose(input)
-    val httpResponse = client.http.post(url, inputJson.toString)
+    val inputJson: JValue = json.decompose(input)
+    val inputJsonString: String = compact(render(inputJson))
+    val httpResponse = client.http.post(url, inputJsonString)
     val rawOutput = httpResponse.body
-
     httpResponse.code match {
       case 200 => AlgoResponse(rawOutput, outputType)
       case _ => AlgoFailure(rawOutput, Metadata(0, ContentTypeVoid, None), rawOutput)
