@@ -1,7 +1,6 @@
 import com.algorithmia.Algorithmia
 import com.algorithmia.algo._
 import org.apache.commons.codec.binary.Base64
-import org.json4s._
 import org.json4s.DefaultReaders._
 import org.json4s.native.JsonMethods._
 import scala.concurrent.duration._
@@ -10,7 +9,6 @@ import org.specs2.mutable._
 object AlgorithmSpec extends Specification {
 
   private val key: String = System.getenv("ALGORITHMIA_API_KEY")
-
   "api key" should {
     "define environment variable ALGORITHMIA_API_KEY" in {
       key must not beNull

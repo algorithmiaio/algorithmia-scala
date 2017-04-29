@@ -1,8 +1,9 @@
 package com.algorithmia.data
 
 import com.algorithmia._
-import java.io.File
-import java.nio.file.Files
+import java.io.{File, InputStream}
+import java.nio.file.{Files, StandardCopyOption}
+import scala.io.Source
 
 class DataFile(client: AlgorithmiaClient, dataUrl: String) extends DataObject(client, dataUrl, DataFileType) {
 
@@ -10,23 +11,34 @@ class DataFile(client: AlgorithmiaClient, dataUrl: String) extends DataObject(cl
     client.http.head(url).code == 200
   }
 
-  def getFile(): File = {
-    val is = client.http.getInputStream(url).body
-    val file = new File(getName)
-    Files.copy(is, file.toPath)
+  def getType: DataObjectType = DataFileType
+
+  def getFile: File = {
+    val is: InputStream = client.http.getInputStream(url).body
+    // Create temp directory
+    val dir = Files.createTempDirectory("algocache").toFile
+    // Create file with same name as this object in temp dir
+    val file = new File(dir, getName)
+    Files.copy(is, file.toPath, StandardCopyOption.REPLACE_EXISTING)
     file
   }
 
-  def getString(): String = {
+  def getString: String = {
     client.http.get(url).body
   }
 
-  def getBytes(): Array[Byte] = {
+  def getBytes: Array[Byte] = {
     client.http.getBytes(url).body
   }
 
   def put(data: String): Unit = {
     client.http.put(url, data.getBytes)
+  }
+
+  def put(is: InputStream): Unit = {
+    // TODO: Stream bytes
+    val bytes = Source.fromInputStream(is).mkString("").getBytes("UTF-8")
+    client.http.put(url, bytes)
   }
 
   def put(file: File): Unit = {

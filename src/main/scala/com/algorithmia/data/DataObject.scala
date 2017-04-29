@@ -17,6 +17,10 @@ abstract class DataObject(client: AlgorithmiaClient, dataUrl: String, objectType
   // Abstract methods
   def exists: Boolean
 
+  def getType: DataObjectType
+  def isDirectory: Boolean = getType == DataDirectoryType
+  def isFile: Boolean = getType == DataFileType
+
   def getName: String = {
   	trimmedPath.substring(trimmedPath.lastIndexOf("/") + 1)
   }
@@ -25,6 +29,6 @@ abstract class DataObject(client: AlgorithmiaClient, dataUrl: String, objectType
     new DataDirectory(client, trimmedPath.replaceFirst("/[^/]+$", ""))
   }
 
-  override def toString(): String = path
+  override def toString: String = path
 
 }

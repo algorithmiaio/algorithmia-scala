@@ -14,6 +14,8 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
     client.http.head(url).code == 200
   }
 
+  def getType: DataObjectType = DataDirectoryType
+
   case class CreateDirectoryRequest(name: String, acl: Option[DataAcl])
   def create(dataAcl: Option[DataAcl] = None): Unit = {
     val req = CreateDirectoryRequest(getName, dataAcl)
