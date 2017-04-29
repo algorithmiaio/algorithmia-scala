@@ -22,9 +22,10 @@ case object ContentTypeBinary extends ContentType {
 
 object ContentType {
   def apply(content_type: String): ContentType = content_type match {
-    case "void" => ContentTypeVoid
     case "text" => ContentTypeText
     case "json" => ContentTypeJson
     case "binary" => ContentTypeBinary
+    case "void" => ContentTypeVoid
+    case _ => ContentTypeVoid
   }
 }

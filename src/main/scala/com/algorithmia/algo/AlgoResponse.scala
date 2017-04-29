@@ -7,8 +7,10 @@ import org.json4s.native.JsonMethods._
  * Represents an algorithm response.
  */
 sealed trait AlgoResponse {
+  def isSuccess: Boolean
   def as[T](implicit reader: Reader[T]): T
   def asOpt[T](implicit reader: Reader[T]): Option[T]
+  def asJsonString: String
   def map[T](f: AlgoSuccess => T): Option[T]
   def metadata: Metadata
   /** Returns the full response from the server */
@@ -16,18 +18,24 @@ sealed trait AlgoResponse {
 }
 
 case class AlgoSuccess(result: JValue, metadata: Metadata, rawOutput: String) extends AlgoResponse {
+  override def isSuccess: Boolean = true
   override def as[T](implicit reader: Reader[T]): T = reader.read(result)
   override def asOpt[T](implicit reader: Reader[T]): Option[T] = try {
     Some(reader.read(result))
   } catch {
     case e: Exception => None
   }
+  def asJsonString: String = {
+    compact(render(result))
+  }
   override def map[T](f: AlgoSuccess => T): Option[T] = Some(f(this))
 }
 
 case class AlgoFailure(message: String, metadata: Metadata, rawOutput: String) extends AlgoResponse {
+  override def isSuccess: Boolean = false
   override def as[T](implicit reader: Reader[T]): T = throw new ClassCastException("Algorithm failure response cannot be cast")
   override def asOpt[T](implicit reader: Reader[T]): Option[T] = None
+  override def asJsonString: String = throw new ClassCastException("Algorithm failure response cannot be cast to json string")
   override def map[T](f: AlgoSuccess => T): Option[T] = None
 }
 
@@ -56,11 +64,11 @@ object AlgoResponse {
   private case class AlgoResponseError(message: String)
   private case class AlgoResponseMetadata(
     duration: Double,
-    content_type: String,
+    content_type: Option[String],
     stdout: Option[String]
   ) {
     def metadata: Metadata = Metadata(
-      duration, ContentType(content_type), stdout
+      duration, ContentType(content_type.getOrElse("")), stdout
     )
   }
 
