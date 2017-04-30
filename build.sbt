@@ -16,3 +16,7 @@ libraryDependencies ++= Seq(
   "junit" % "junit" % "4.12" % Test,
   "org.specs2" %% "specs2" % "3.7" % Test
 )
+
+// Spark package
+// sbt spDist
+spName := "algorithmiaio/algorithmia-scala"
