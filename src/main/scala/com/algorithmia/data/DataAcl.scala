@@ -1,9 +1,34 @@
 package com.algorithmia.data
 
+import play.api.libs.json._
+
 case class DataAcl(read: DataAclType)
 
-sealed trait DataAclType
+sealed trait DataAclType {
+  def toJson: JsValue
+}
 
-case object DataPublic extends DataAclType
-case object DataMyAlgorithms extends DataAclType
-case object DataPrivate extends DataAclType
+case object DataPublic extends DataAclType {
+  def toJson: JsValue = Json.arr("user://*")
+}
+case object DataMyAlgorithms extends DataAclType {
+  def toJson: JsValue = Json.arr("algo://.my/*")
+}
+case object DataPrivate extends DataAclType {
+  def toJson: JsValue = Json.arr()
+}
+
+object DataAclType {
+  implicit object DataAclTypeReads extends Reads[DataAclType] {
+    def reads(json: JsValue): JsResult[DataAclType] = {
+      ??? // TODO
+    }
+  }
+  implicit object DataAclTypeWrites extends Writes[DataAclType] {
+    def writes(acl: DataAclType): JsValue = acl.toJson
+  }
+}
+object DataAcl {
+  implicit val dataAclReads: Reads[DataAcl] = Json.reads[DataAcl]
+  implicit val dataAclWrites: Writes[DataAcl] = Json.writes[DataAcl]
+}

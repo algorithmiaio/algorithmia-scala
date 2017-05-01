@@ -73,9 +73,10 @@ class HttpClient(apiKey: Option[String]) {
   }
 
   // PATCH
-  def patch(url: String, data: JValue): HttpResponse[String] = {
+  def patch(url: String, data: String): HttpResponse[String] = {
     Http(url)
       .method("PATCH")
+      .postData(data)
       .header("Content-Type", "application/json")
       .header("User-Agent", userAgent)
       .header("Authorization", apiKey.orNull)

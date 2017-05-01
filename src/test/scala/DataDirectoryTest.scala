@@ -31,6 +31,7 @@ class DataDirectoryTest extends DataDirectoryGenericTest {
       if (dir.exists) dir.delete(true)
       dir.create(DataAcl(read = DataPublic))
       dir.getPermissions.read mustEqual DataPublic
+
       dir.updatePermissions(DataAcl(read = DataPrivate))
       dir.getPermissions.read mustEqual DataPrivate
     }

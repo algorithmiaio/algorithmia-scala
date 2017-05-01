@@ -11,7 +11,7 @@ class Algorithm(client: AlgorithmiaClient, algoUrl: String, val options: Map[Str
   private val trimmedPath: String = algoUrl.replaceAll("^algo://|^/", "")
   val url: String = Algorithmia.apiBaseUrl + "/v1/algo/" + trimmedPath
 
-  val json = new Json(DefaultFormats)
+  private val json = new Json(DefaultFormats)
 
   @throws(classOf[AlgorithmApiError])
   def pipe(input: Any): AlgoResponse = {

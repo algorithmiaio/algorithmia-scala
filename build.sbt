@@ -8,6 +8,7 @@ scalaVersion := "2.11.11"
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xlint")
 
 libraryDependencies ++= Seq(
+  "com.typesafe.play" %% "play-json" % "2.4.6",
   "org.scalaj" %% "scalaj-http" % "2.3.0",
   "org.json4s" %% "json4s-native" % "3.5.1",
   // Test
