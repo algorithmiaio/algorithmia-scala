@@ -1,7 +1,6 @@
 package com.algorithmia.client
 
 import java.io.InputStream
-import org.json4s.JValue
 import scalaj.http._
 
 class HttpClient(apiKey: Option[String]) {
