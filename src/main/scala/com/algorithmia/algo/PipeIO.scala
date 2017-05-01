@@ -1,7 +1,6 @@
 package com.algorithmia.algo
 
-import org.json4s._
-import org.json4s.native.JsonMethods._
+import play.api.libs.json._
 import scala.concurrent.{Await, ExecutionContext}
 
 /**
@@ -9,19 +8,15 @@ import scala.concurrent.{Await, ExecutionContext}
  * input | algo1 | algo2
  */
 case class PipeIO(value: String, totalDuration: Double = 0) {
-  private implicit val formats = DefaultFormats
 
-  @throws(classOf[AlgorithmError])
-  @throws(classOf[AlgorithmApiError])
   def |(that: Algorithm): PipeIO = {
     that.pipe(this.value) match {
       case AlgoSuccess(result, metadata, _) => {
-        result.extractOpt[AlgorithmOutput[JValue]] match {
-          case Some(output) => PipeIO(compact(render(output.result)), this.totalDuration + output.metadata.duration)
-          case None => throw new AlgorithmError(result.toString)
-        }
+        PipeIO(result.toString, this.totalDuration + metadata.duration)
       }
       case AlgoFailure(message, metadata, _) => throw new AlgorithmError(message)
     }
   }
 }
+
+private class AlgorithmError(message: String) extends Exception(message)

@@ -1,12 +1,9 @@
 import com.algorithmia.Algorithmia
 import com.algorithmia.algo._
 
-import org.json4s._
-import org.json4s.JsonDSL._
-import org.json4s.native.JsonMethods._
+import play.api.libs.json._
 
 object Sample {
-    implicit val formats = DefaultFormats
 
     def main(args: Array[String]) = {
         val client = Algorithmia.client(sys.env("ALGORITHMIA_API_KEY"))
@@ -16,17 +13,17 @@ object Sample {
         // Factor an number
         val factorInput = "62"
         println(s"Factoring with: $factorInput")
-        val factorOutput = factor.pipe(factorInput).map(_.result).get
-        val factorResult = factorOutput.extract[AlgorithmOutput[List[Int]]]
+        val factorOutput = factor.pipe(factorInput)
+        val factorResult = factorOutput.as[List[Int]]
 
         // Find the min and max of the factors
-        val minmaxInput = compact(render(factorResult.result))
+        val minmaxInput = Json.toJson(factorResult)
         println(s"MinMax with: $minmaxInput")
         val minmaxOutput = minmax.pipe(minmaxInput)
-        val minmaxResult = factorOutput.extract[AlgorithmOutput[List[Int]]]
+        val minmaxResult = minmaxOutput.as[List[Int]]
 
 
-        println(s"Min and Max factors of ${factorInput}: ${minmaxResult.result}")
+        println(s"Min and Max factors of ${factorInput}: ${minmaxResult}")
         println("----------")
         println("Repeat process with '|' syntax")
 

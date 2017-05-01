@@ -13,7 +13,6 @@ class Algorithm(client: AlgorithmiaClient, algoUrl: String, val options: Map[Str
 
   private val json = new Json(DefaultFormats)
 
-  @throws(classOf[AlgorithmApiError])
   def pipe(input: Any): AlgoResponse = {
     val inputJson: JValue = json.decompose(input)
     val inputJsonString: String = compact(render(inputJson))
@@ -48,8 +47,3 @@ class Algorithm(client: AlgorithmiaClient, algoUrl: String, val options: Map[Str
   }
 
 }
-
-case class AlgorithmOutput[T](result: T, metadata: Metadata)
-
-class AlgorithmError(message: String) extends Exception(message)
-class AlgorithmApiError(body: String, code: Int) extends Exception(s"$code - $body")

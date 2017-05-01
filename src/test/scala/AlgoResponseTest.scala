@@ -1,8 +1,7 @@
 import com.algorithmia.algo._
 import org.apache.commons.io.IOUtils
-import org.json4s.JValue
-import org.json4s.DefaultReaders._
 import org.specs2.mutable._
+import play.api.libs.json._
 
 object AlgoResponseTest extends Specification {
 
@@ -16,8 +15,7 @@ object AlgoResponseTest extends Specification {
     "handle success" in {
       val response = parseResourceAsResponse("algo_success_json_array_long.json")
       response.isSuccess must beTrue
-      response.as[JValue].toString mustEqual "[2,2,2,3,3]"
-      response.asJsonString mustEqual "[2,2,2,3,3]"
+      response.as[JsValue].toString mustEqual "[2,2,2,3,3]"
     }
 
   }
@@ -31,11 +29,11 @@ object AlgoResponseTest extends Specification {
       expected mustEqual result
     }
 
-    "handle string to int" in {
-      val response = parseResourceAsResponse("algo_success_text_int.json")
-      val result = response.as[Int]
-      result mustEqual 42
-    }
+    // "handle string to int" in {
+    //   val response = parseResourceAsResponse("algo_success_text_int.json")
+    //   val result = response.as[Int]
+    //   result mustEqual 42
+    // }
 
     "handle int" in {
       val response = parseResourceAsResponse("algo_success_json_int.json")
@@ -43,11 +41,11 @@ object AlgoResponseTest extends Specification {
       result mustEqual 42
     }
 
-    "handle int to string" in {
-      val response = parseResourceAsResponse("algo_success_json_int.json")
-      val result = response.as[String]
-      result mustEqual "42"
-    }
+    // "handle int to string" in {
+    //   val response = parseResourceAsResponse("algo_success_json_int.json")
+    //   val result = response.as[String]
+    //   result mustEqual "42"
+    // }
 
     "handle int list" in {
       val response = parseResourceAsResponse("algo_success_json_array_long.json")

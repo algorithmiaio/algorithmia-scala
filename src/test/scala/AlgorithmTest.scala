@@ -20,7 +20,7 @@ object AlgorithmSpec extends Specification {
 
     "output result 42" in {
       val res = client.algo("docs/JavaAddOne").pipe(41)
-      val output: String = res.map(a => compact(render(a.result))).getOrElse("")
+      val output: String = res.map(_.result.toString).getOrElse("")
       output mustEqual "42"
     }
 
