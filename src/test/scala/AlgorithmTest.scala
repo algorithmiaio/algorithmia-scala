@@ -4,7 +4,7 @@ import org.apache.commons.codec.binary.Base64
 import scala.concurrent.duration._
 import org.specs2.mutable._
 
-object AlgorithmSpec extends Specification {
+object AlgorithmTest extends Specification {
 
   private val key: String = System.getenv("ALGORITHMIA_API_KEY")
   "api key" should {
@@ -46,14 +46,14 @@ object AlgorithmSpec extends Specification {
     val res = client.algo("docs/JavaBinaryInAndOut").pipe(input)
 
     "parse result base64" in {
-      val output = res.as[String]
+      val output = res.asString
       input mustEqual Base64.decodeBase64(output)
       Base64.encodeBase64String(input) mustEqual output
       res.metadata.content_type.content_type mustEqual ContentTypeBinary.content_type
     }
 
     "parse result byte array" in {
-      val output = res.as[Array[Byte]]
+      val output = res.asBytes
       input mustEqual output
       Base64.encodeBase64String(input) mustEqual Base64.encodeBase64String(output)
       res.metadata.content_type.content_type mustEqual ContentTypeBinary.content_type

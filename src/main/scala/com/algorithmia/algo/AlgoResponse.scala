@@ -1,6 +1,7 @@
 package com.algorithmia.algo
 
 import java.io.IOException
+import org.apache.commons.codec.binary.Base64
 import play.api.libs.json._
 
 /**
@@ -10,6 +11,8 @@ sealed trait AlgoResponse {
   def isSuccess: Boolean
   def as[T](implicit reads: Reads[T]): T
   def asOpt[T](implicit reads: Reads[T]): Option[T]
+  def asString: String
+  def asBytes: Array[Byte]
   def map[T](f: AlgoSuccess => T): Option[T]
   def metadata: Metadata
   /** Returns the full response from the server */
@@ -18,14 +21,32 @@ sealed trait AlgoResponse {
 
 case class AlgoSuccess(result: JsValue, metadata: Metadata, rawOutput: String) extends AlgoResponse {
   override def isSuccess: Boolean = true
-  override def as[T](implicit reads: Reads[T]): T = Json.fromJson[T](result) match {
-    case JsSuccess(obj,_) => obj
-    case JsError(errors) => {
-      val errorMsg = errors.map(_._2.mkString(",")).mkString("\n")
-      throw new IOException("Failed to parse algorithm response: " + errorMsg)
+  override def as[T](implicit reads: Reads[T]): T = {
+    metadata.content_type match {
+      case ContentTypeJson | ContentTypeText => {
+        Json.fromJson[T](result) match {
+          case JsSuccess(obj,_) => obj
+          case JsError(errors) => {
+            val errorMsg = errors.map(_._2.mkString(",")).mkString("\n")
+            throw new IOException("Failed to parse algorithm response: " + errorMsg)
+          }
+        }
+      }
+      case _ => throw new IOException("Cannot cast algorithm response")
     }
   }
   override def asOpt[T](implicit reads: Reads[T]): Option[T] = Json.fromJson[T](result).asOpt
+  override def asString: String = result match {
+    case JsString(str) => str
+    case _ => result.toString
+  }
+  override def asBytes: Array[Byte] = metadata.content_type match {
+    case ContentTypeBinary => result match {
+      case JsString(str) => Base64.decodeBase64(str) // Decode base 64
+      case _ => throw new IOException("Cannot cast algorithm response to byte array")
+    }
+    case _ => throw new IOException("Cannot cast algorithm response to byte array")
+  }
   override def map[T](f: AlgoSuccess => T): Option[T] = Some(f(this))
 }
 
@@ -33,6 +54,8 @@ case class AlgoFailure(message: String, metadata: Metadata, rawOutput: String) e
   override def isSuccess: Boolean = false
   override def as[T](implicit reads: Reads[T]): T = throw new ClassCastException("Algorithm failure response cannot be cast")
   override def asOpt[T](implicit reads: Reads[T]): Option[T] = None
+  override def asString: String = throw new ClassCastException("Algorithm failure response cannot be cast")
+  override def asBytes: Array[Byte] = throw new ClassCastException("Algorithm failure response cannot be cast")
   override def map[T](f: AlgoSuccess => T): Option[T] = None
 }
 

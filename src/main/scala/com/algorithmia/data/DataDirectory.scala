@@ -28,11 +28,11 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
   }
 
   def files: Iterable[DataFile] = {
-    List.empty // TODO
+    ???
   }
 
   def dirs: Iterable[DataFile] = {
-    List.empty // TODO
+    ???
   }
 
   def putFile(file: File): DataFile = {
