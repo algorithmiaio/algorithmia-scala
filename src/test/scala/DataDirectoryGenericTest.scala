@@ -29,7 +29,6 @@ abstract class DataDirectoryGenericTest extends Specification {
     "get parent" in {
       val dir = new DataDirectory(null, getFullPath("javaclienttest"))
       val parent = new DataDirectory(null, getFullPath(""))
-      parent.path mustEqual dir.getParent.path
       fuzzyDirectoryMatch(parent.path, dir.getParent.path) must beTrue
     }
 

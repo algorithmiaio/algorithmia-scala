@@ -20,8 +20,11 @@ case object DataPrivate extends DataAclType {
 
 object DataAclType {
   implicit object DataAclTypeReads extends Reads[DataAclType] {
-    def reads(json: JsValue): JsResult[DataAclType] = {
-      ??? // TODO
+    def reads(json: JsValue): JsResult[DataAclType] = json match {
+      case JsArray(Seq(JsString("user://*"))) => JsSuccess(DataPublic)
+      case JsArray(Seq(JsString("algo://.my/*"))) => JsSuccess(DataMyAlgorithms)
+      case JsArray(Seq()) => JsSuccess(DataPrivate)
+      case _ => JsError()
     }
   }
   implicit object DataAclTypeWrites extends Writes[DataAclType] {
