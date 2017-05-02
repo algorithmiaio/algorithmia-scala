@@ -4,7 +4,7 @@ import org.junit.Test
 import org.junit.Assert
 
 object DataDirectoryTest {
-  private val pathPrefix = "data://.my/"
+  private val pathPrefix = ".my/"
 }
 
 class DataDirectoryTest extends DataDirectoryGenericTest {

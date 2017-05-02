@@ -125,14 +125,10 @@ abstract class DataDirectoryGenericTest extends Specification {
   }
 
   private def getJoinedName(one: String, two: String): String = {
-    val result: String = if (one.endsWith("/"))
+    if (one.endsWith("/"))
       getFullPath(one) + two
     else
       getFullPath(one) + "/" + two
-    if (!result.startsWith("data://"))
-      "data://" + result
-    else
-      result
   }
 
   @throws[Exception]
