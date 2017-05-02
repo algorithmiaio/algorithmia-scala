@@ -2,6 +2,7 @@ package com.algorithmia.data
 
 import com.algorithmia._
 import java.io.{File, IOException}
+import java.net.URLEncoder
 import play.api.libs.json._
 
 class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObject(client, dataUrl, DataDirectoryType) {
@@ -95,7 +96,7 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
     * @return a page of files and directories that exist within this directory
     */
   def getPage(marker: Option[String], getAcl: Boolean): DirectoryListResponse = {
-    val markerParam = marker.map(m => "marker=" + m)
+    val markerParam = marker.map(m => "marker=" + URLEncoder.encode(m, "UTF-8"))
     val aclParam = if(getAcl) Some("marker=true") else None
     val params1 = (markerParam ++ aclParam).mkString("&")
     val params = if(params1.isEmpty) "" else "?" + params1

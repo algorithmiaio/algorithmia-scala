@@ -47,6 +47,7 @@ abstract class DataDirectoryGenericTest extends Specification {
   }
 
   "list operations" should {
+
     "list directory" in {
       val parentDir = "javaDataDirList"
       val dir = Algorithmia.client(key).dir(getFullPath(parentDir))
