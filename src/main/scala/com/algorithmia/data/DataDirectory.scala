@@ -28,7 +28,9 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
   }
 
   def files: Iterable[DataFile] = {
-    ???
+    new Iterable[DataFile] {
+      def iterator: Iterator[DataFile] = new DataFileIterator(DataDirectory.this)
+    }
   }
 
   def dirs: Iterable[DataFile] = {
@@ -45,16 +47,15 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
     client.http.delete(s"$url?force=$forceDelete")
   }
 
-  private case class DirectoryListResponse(acl: DataAcl)
-  private implicit val directoryListResponseReads: Reads[DirectoryListResponse] = Json.reads[DirectoryListResponse]
+  private case class PermissionResponse(acl: DataAcl)
+  private implicit val permissionResponseReads: Reads[PermissionResponse] = Json.reads[PermissionResponse]
 
   def getPermissions: DataAcl = {
     // To get permissions, list the directory and extract the acl field
     val response = client.http.get(url + "?acl=true")
     if(response.code == 200) {
       val responseJson = Json.parse(response.body)
-      val listing = Json.fromJson[DirectoryListResponse](responseJson)
-      Json.fromJson[DirectoryListResponse](responseJson) match {
+      Json.fromJson[PermissionResponse](responseJson) match {
         case JsSuccess(listing, _) => listing.acl
         case JsError(_) => throw new IOException("Failed to parse permissions")
       }
@@ -71,6 +72,41 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
     val reqJson = Json.toJson(req).toString
     val response = client.http.patch(url, reqJson)
     response.code == 200
+  }
+
+  case class FileMetadata(filename: String)
+  case class DirectoryMetadata(name: String)
+  case class DirectoryListResponse(
+    files: Option[List[FileMetadata]],
+    folders: Option[List[DirectoryMetadata]],
+    marker: Option[String],
+    acl: Option[DataAcl]
+  )
+  private implicit val fileMetadataReads: Reads[FileMetadata] = Json.reads[FileMetadata]
+  private implicit val directoryMetadataReads: Reads[DirectoryMetadata] = Json.reads[DirectoryMetadata]
+  private implicit val directoryListResponseReads: Reads[DirectoryListResponse] = Json.reads[DirectoryListResponse]
+
+  /**
+    * Gets a single page of the directory listing. Subsquent pages are fetched with the returned marker value.
+    *
+    * @param marker indicates the specific page to fetch; first page is fetched if None
+    * @return a page of files and directories that exist within this directory
+    */
+  def getPage(marker: Option[String], getAcl: Boolean): DirectoryListResponse = {
+    val markerParam = marker.map(m => "marker=" + m)
+    val aclParam = if(getAcl) Some("marker=true") else None
+    val params1 = (markerParam ++ aclParam).mkString("&")
+    val params = if(params1.isEmpty) "" else "?" + params1
+    val response = client.http.get(url + params)
+    if(response.code == 200) {
+      val responseJson = Json.parse(response.body)
+      Json.fromJson[DirectoryListResponse](responseJson) match {
+        case JsSuccess(listing,_) => listing
+        case JsError(errors) => throw new IOException("Failed to parse listing page: " + errors)
+      }
+    } else {
+      throw new IOException("Failed to fetch listing page, status code: " + response.code)
+    }
   }
 
 }

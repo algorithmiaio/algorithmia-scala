@@ -7,7 +7,7 @@ sealed trait DataObjectType
 case object DataFileType extends DataObjectType
 case object DataDirectoryType extends DataObjectType
 
-abstract class DataObject(client: AlgorithmiaClient, dataUrl: String, objectType: DataObjectType) {
+abstract class DataObject(val client: AlgorithmiaClient, dataUrl: String, objectType: DataObjectType) {
 
   val path: String = dataUrl.replaceAll("^data://|^/", "")
   val trimmedPath: String = if(path.endsWith("/")) path.dropRight(1) else path

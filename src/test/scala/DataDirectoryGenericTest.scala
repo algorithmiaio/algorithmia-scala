@@ -54,13 +54,14 @@ abstract class DataDirectoryGenericTest extends Specification {
       dir.create()
       dir.file("foo").put("bar")
       dir.file("foo2").put("bar2")
-      val filesFound = new util.HashSet[String]
+      val filesFound = new java.util.HashSet[String]
       var numFiles = 0
       for (file <- dir.files) {
         numFiles += 1
         filesFound.add(file.toString) must beTrue
       }
       numFiles mustEqual 2
+
       filesFound.contains(getJoinedName(parentDir, "foo")) must beTrue
       filesFound.contains(getJoinedName(parentDir, "foo2")) must beTrue
     }
@@ -141,7 +142,7 @@ abstract class DataDirectoryGenericTest extends Specification {
     dir.create()
     dir.file("foo").put("bar")
     dir.file("foo2").put("bar2")
-    val filesFound = new util.HashSet[String]
+    val filesFound = new java.util.HashSet[String]
     var numFiles = 0
     for (file <- dir.files) {
       numFiles += 1
