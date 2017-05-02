@@ -33,8 +33,10 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
     }
   }
 
-  def dirs: Iterable[DataFile] = {
-    ???
+  def dirs: Iterable[DataDirectory] = {
+    new Iterable[DataDirectory] {
+      def iterator: Iterator[DataDirectory] = new DataDirectoryIterator(DataDirectory.this)
+    }
   }
 
   def putFile(file: File): DataFile = {
