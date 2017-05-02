@@ -73,7 +73,7 @@ object AlgoResponseTest extends Specification {
       val response = parseResourceAsResponse("algo_success_binary.json")
       response.isSuccess must beTrue
       response.metadata.content_type mustEqual ContentTypeBinary
-      val result = response.as[Array[Byte]]
+      val result = response.asBytes
       result.length mustEqual 10
     }
 
