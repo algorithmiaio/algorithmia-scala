@@ -22,14 +22,14 @@ class DataDirectoryTest extends DataDirectoryGenericTest {
     "create directory with permissions" in {
       val dir = Algorithmia.client(key).dir("data://.my/javaCreateWithPermissions")
       if (dir.exists) dir.delete(true)
-      dir.create(DataAcl(read = DataPublic))
+      dir.create(Some(DataAcl(read = DataPublic)))
       dir.getPermissions.read mustEqual DataPublic
     }
 
     "update directory permissions" in {
       val dir = Algorithmia.client(key).dir("data://.my/javaUpdatePermissions")
       if (dir.exists) dir.delete(true)
-      dir.create(DataAcl(read = DataPublic))
+      dir.create(Some(DataAcl(read = DataPublic)))
       dir.getPermissions.read mustEqual DataPublic
 
       dir.updatePermissions(DataAcl(read = DataPrivate))

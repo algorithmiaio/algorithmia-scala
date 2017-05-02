@@ -14,10 +14,10 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
 
   def getType: DataObjectType = DataDirectoryType
 
-  private case class CreateDirectoryRequest(name: String, acl: DataAcl)
+  private case class CreateDirectoryRequest(name: String, acl: Option[DataAcl])
   private implicit val createDirectoryRequestWrites: Writes[CreateDirectoryRequest] = Json.writes[CreateDirectoryRequest]
 
-  def create(dataAcl: DataAcl = defaultAcl): Unit = {
+  def create(dataAcl: Option[DataAcl] = None): Unit = {
     val req = CreateDirectoryRequest(getName, dataAcl)
     val reqJson = Json.toJson(req).toString
     client.http.post(getParent.url, reqJson)
