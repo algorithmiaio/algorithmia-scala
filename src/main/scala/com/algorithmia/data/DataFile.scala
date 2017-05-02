@@ -14,13 +14,16 @@ class DataFile(client: AlgorithmiaClient, dataUrl: String) extends DataObject(cl
   def getType: DataObjectType = DataFileType
 
   def getFile: File = {
-    val is: InputStream = client.http.getInputStream(url).body
-    // Create temp directory
-    val dir = Files.createTempDirectory("algocache").toFile
-    // Create file with same name as this object in temp dir
-    val file = new File(dir, getName)
-    Files.copy(is, file.toPath, StandardCopyOption.REPLACE_EXISTING)
-    file
+    val response = client.http.getInputStream(url) { is =>
+      // Create temp directory
+      val dir = Files.createTempDirectory("algocache").toFile
+      // Create file with same name as this object in temp dir
+      val file = new File(dir, getName)
+      // Copy inputstream to file
+      Files.copy(is, file.toPath, StandardCopyOption.REPLACE_EXISTING)
+      file
+    }
+    response.body
   }
 
   def getString: String = {

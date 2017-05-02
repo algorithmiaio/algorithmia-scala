@@ -23,8 +23,8 @@ class HttpClient(apiKey: Option[String]) {
   def getBytes(url: String): HttpResponse[Array[Byte]] = {
     getRequest(url).asBytes
   }
-  def getInputStream(url: String): HttpResponse[InputStream] = {
-    getRequest(url).execute(is => is)
+  def getInputStream[T](url: String)(op: InputStream => T): HttpResponse[T] = {
+    getRequest(url).execute(op)
   }
   private def getRequest(url: String): HttpRequest = {
     Http(url)
