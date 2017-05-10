@@ -1,8 +1,9 @@
 package com.algorithmia.data
 
 import com.algorithmia._
-import java.io.{File, InputStream}
+import java.io.{File, FileInputStream, InputStream}
 import java.nio.file.{Files, StandardCopyOption}
+
 import scala.io.Source
 
 class DataFile(client: AlgorithmiaClient, dataUrl: String) extends DataObject(client, dataUrl, DataFileType) {
@@ -38,15 +39,13 @@ class DataFile(client: AlgorithmiaClient, dataUrl: String) extends DataObject(cl
     client.http.put(url, data.getBytes)
   }
 
-  def put(is: InputStream): Unit = {
-    // TODO: Stream bytes
-    val bytes = Source.fromInputStream(is).mkString("").getBytes("UTF-8")
-    client.http.put(url, bytes)
+  def put(file: File): Unit = {
+    val is = new FileInputStream(file)
+    client.http.put(url, is, Some(file.length))
   }
 
-  def put(file: File): Unit = {
-    val bytes = Files.readAllBytes(file.toPath)
-    client.http.put(url, bytes)
+  def put(is: InputStream): Unit = {
+    client.http.put(url, is, None)
   }
 
   def delete(): Unit = {

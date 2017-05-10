@@ -32,7 +32,7 @@ class DataDirectoryTest extends DataDirectoryGenericTest {
       dir.create(Some(DataAcl(read = DataPublic)))
       dir.getPermissions.read mustEqual DataPublic
 
-      dir.updatePermissions(DataAcl(read = DataPrivate))
+      dir.updatePermissions(DataAcl(read = DataPrivate)) must beTrue
       dir.getPermissions.read mustEqual DataPrivate
     }
 

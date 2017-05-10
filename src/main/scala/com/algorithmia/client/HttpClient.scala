@@ -1,6 +1,8 @@
 package com.algorithmia.client
 
-import java.io.InputStream
+import java.io.{InputStream, OutputStream}
+import java.net.HttpURLConnection
+
 import scalaj.http._
 
 class HttpClient(apiKey: Option[String]) {
@@ -35,8 +37,6 @@ class HttpClient(apiKey: Option[String]) {
 
   // POST
   def post(url: String, data: String): HttpResponse[String] = {
-    // println(s"DEBUG URL: $url")
-    // println(s"DEBUG DATA: $data")
     Http(url)
       .postData(data)
       .header("Content-Type", "application/json")
@@ -49,10 +49,24 @@ class HttpClient(apiKey: Option[String]) {
 
   // PUT
   def put(url: String, data: Array[Byte]): HttpResponse[String] = {
-    // println(s"DEBUG URL: $url")
-    // println(s"DEBUG DATA: $data")
     Http(url)
       .put(data)
+      .header("User-Agent", userAgent)
+      .header("Authorization", apiKey.orNull)
+      .header("Accept","application/json")
+      .option(HttpOptions.connTimeout(60000))
+      .asString
+  }
+
+  def put(url: String, is: InputStream, length: Option[Long]): HttpResponse[String] = {
+    Http(url)
+      .method("PUT")
+      .options({ conn =>
+        conn.setDoOutput(true)
+        length.foreach(l => conn.setFixedLengthStreamingMode(l))
+        val os = conn.getOutputStream
+        copy(is, os)
+      })
       .header("User-Agent", userAgent)
       .header("Authorization", apiKey.orNull)
       .header("Accept","application/json")
@@ -82,6 +96,15 @@ class HttpClient(apiKey: Option[String]) {
       .header("Accept","application/json")
       .option(HttpOptions.connTimeout(60000))
       .asString
+  }
+
+  private def copy(is: InputStream, os: OutputStream): Unit = {
+    val bytes = new Array[Byte](1024) //1024 bytes - Buffer size
+    Iterator
+      .continually (is.read(bytes))
+      .takeWhile (_ != -1)
+      .foreach (read => os.write(bytes,0,read))
+    os.close()
   }
 
 }
