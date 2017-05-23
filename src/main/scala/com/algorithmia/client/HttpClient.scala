@@ -98,12 +98,17 @@ class HttpClient(apiKey: Option[String]) {
       .asString
   }
 
+  /**
+   * Use our own stream copy instead of adding dependency on commons io
+   */
   private def copy(is: InputStream, os: OutputStream): Unit = {
-    val bytes = new Array[Byte](1024) //1024 bytes - Buffer size
-    Iterator
-      .continually (is.read(bytes))
-      .takeWhile (_ != -1)
-      .foreach (read => os.write(bytes,0,read))
+    val buffer = new Array[Byte](1024)
+    var len = is.read(buffer)
+    while( len != -1 ) {
+      os.write(buffer, 0, len)
+      len = is.read(buffer)
+    }
+    is.close()
     os.close()
   }
 
