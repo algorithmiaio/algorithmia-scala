@@ -8,13 +8,16 @@ import scalaj.http._
 class HttpClient(apiKey: Option[String]) {
   private val userAgent = "algorithmia-scala/1.0.0"
 
+  private val connTimeout = 30 * 1000 // 30sec
+  private val readTimeout = 3060 * 1000 // 51min
+
   // HEAD
   def head(url: String): HttpResponse[String] = {
     Http(url)
       .method("HEAD")
       .header("User-Agent", userAgent)
       .header("Authorization", apiKey.orNull)
-      .option(HttpOptions.connTimeout(60000))
+      .timeout(connTimeout, readTimeout)
       .asString
   }
 
@@ -32,7 +35,7 @@ class HttpClient(apiKey: Option[String]) {
     Http(url)
       .header("User-Agent", userAgent)
       .header("Authorization", apiKey.orNull)
-      .option(HttpOptions.connTimeout(60000))
+      .timeout(connTimeout, readTimeout)
   }
 
   // POST
@@ -43,7 +46,7 @@ class HttpClient(apiKey: Option[String]) {
       .header("User-Agent", userAgent)
       .header("Authorization", apiKey.orNull)
       .header("Accept","application/json")
-      .option(HttpOptions.connTimeout(60000))
+      .timeout(connTimeout, readTimeout)
       .asString
   }
 
@@ -54,7 +57,7 @@ class HttpClient(apiKey: Option[String]) {
       .header("User-Agent", userAgent)
       .header("Authorization", apiKey.orNull)
       .header("Accept","application/json")
-      .option(HttpOptions.connTimeout(60000))
+      .timeout(connTimeout, readTimeout)
       .asString
   }
 
@@ -70,7 +73,7 @@ class HttpClient(apiKey: Option[String]) {
       .header("User-Agent", userAgent)
       .header("Authorization", apiKey.orNull)
       .header("Accept","application/json")
-      .option(HttpOptions.connTimeout(60000))
+      .timeout(connTimeout, readTimeout)
       .asString
   }
 
@@ -81,7 +84,7 @@ class HttpClient(apiKey: Option[String]) {
       .header("User-Agent", userAgent)
       .header("Authorization", apiKey.orNull)
       .header("Accept","application/json")
-      .option(HttpOptions.connTimeout(60000))
+      .timeout(connTimeout, readTimeout)
       .asString
   }
 
@@ -94,7 +97,7 @@ class HttpClient(apiKey: Option[String]) {
       .header("User-Agent", userAgent)
       .header("Authorization", apiKey.orNull)
       .header("Accept","application/json")
-      .option(HttpOptions.connTimeout(60000))
+      .timeout(connTimeout, readTimeout)
       .asString
   }
 
