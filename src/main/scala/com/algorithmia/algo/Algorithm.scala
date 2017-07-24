@@ -1,12 +1,12 @@
 package com.algorithmia.algo
 
-import com.algorithmia.{Algorithmia, AlgorithmiaClient}
+import com.algorithmia.{AlgorithmiaConf, AlgorithmiaClient}
 import play.api.libs.json._
 import scala.concurrent.duration.{Duration, FiniteDuration, SECONDS}
 
 class Algorithm(client: AlgorithmiaClient, algoUrl: String, val options: Map[String,String] = Map.empty) {
   private val trimmedPath: String = algoUrl.replaceAll("^algo://|^/", "")
-  val url: String = Algorithmia.apiBaseUrl + "/v1/algo/" + trimmedPath
+  val url: String = AlgorithmiaConf.apiAddress + "/v1/algo/" + trimmedPath
 
   def pipe[T](input: T)(implicit reads: Writes[T]): AlgoResponse = {
     val inputJson: JsValue = Json.toJson(input)

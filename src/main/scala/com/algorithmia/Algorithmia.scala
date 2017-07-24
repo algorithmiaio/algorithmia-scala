@@ -4,7 +4,6 @@ import com.algorithmia.algo._
 import com.algorithmia.data._
 
 object Algorithmia {
-  val apiBaseUrl: String = "https://api.algorithmia.com"
 
   private val defaultClient: AlgorithmiaClient = AlgorithmiaClient(None)
 

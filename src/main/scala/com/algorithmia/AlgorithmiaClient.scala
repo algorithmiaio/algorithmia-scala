@@ -5,8 +5,6 @@ import com.algorithmia.client.HttpClient
 import com.algorithmia.data._
 
 case class AlgorithmiaClient(apiKey: Option[String]) {
-  private val baseUrl = "https://api.algorithmia.com"
-
   val http = new HttpClient(apiKey)
 
   def algo(algoUrl: String): Algorithm = new Algorithm(this, algoUrl)

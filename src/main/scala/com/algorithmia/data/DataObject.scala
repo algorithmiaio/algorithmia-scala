@@ -12,7 +12,7 @@ abstract class DataObject(val client: AlgorithmiaClient, dataUrl: String, object
   val path: String = dataUrl.replaceAll("^data://|^/", "")
   val trimmedPath: String = if(path.endsWith("/")) path.dropRight(1) else path
 
-  val url: String = Algorithmia.apiBaseUrl + "/v1/data/" + URLEncoder.encode(path, "UTF-8")
+  val url: String = AlgorithmiaConf.apiAddress + "/v1/data/" + URLEncoder.encode(path, "UTF-8")
 
   // Abstract methods
   def exists: Boolean
