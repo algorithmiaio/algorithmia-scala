@@ -11,58 +11,50 @@ class HttpClient(apiKey: Option[String]) {
   private val connTimeout = 30 * 1000 // 30sec
   private val readTimeout = 3060 * 1000 // 51min
 
+  private def httpRequest(url: String): HttpRequest = {
+    val headers = Seq("User-Agent" -> userAgent) ++ apiKey.map("Authorization" -> _)
+    Http(url)
+      .headers(headers)
+      .timeout(connTimeout, readTimeout)
+  }
+
   // HEAD
   def head(url: String): HttpResponse[String] = {
-    Http(url)
+    httpRequest(url)
       .method("HEAD")
-      .header("User-Agent", userAgent)
-      .header("Authorization", apiKey.orNull)
-      .timeout(connTimeout, readTimeout)
       .asString
   }
 
   // GET
   def get(url: String): HttpResponse[String] = {
-    getRequest(url).asString
+    httpRequest(url).asString
   }
   def getBytes(url: String): HttpResponse[Array[Byte]] = {
-    getRequest(url).asBytes
+    httpRequest(url).asBytes
   }
   def getInputStream[T](url: String)(op: InputStream => T): HttpResponse[T] = {
-    getRequest(url).execute(op)
-  }
-  private def getRequest(url: String): HttpRequest = {
-    Http(url)
-      .header("User-Agent", userAgent)
-      .header("Authorization", apiKey.orNull)
-      .timeout(connTimeout, readTimeout)
+    httpRequest(url).execute(op)
   }
 
   // POST
   def post(url: String, data: String): HttpResponse[String] = {
-    Http(url)
+    httpRequest(url)
       .postData(data)
       .header("Content-Type", "application/json")
-      .header("User-Agent", userAgent)
-      .header("Authorization", apiKey.orNull)
       .header("Accept","application/json")
-      .timeout(connTimeout, readTimeout)
       .asString
   }
 
   // PUT
   def put(url: String, data: Array[Byte]): HttpResponse[String] = {
-    Http(url)
+    httpRequest(url)
       .put(data)
-      .header("User-Agent", userAgent)
-      .header("Authorization", apiKey.orNull)
       .header("Accept","application/json")
-      .timeout(connTimeout, readTimeout)
       .asString
   }
 
   def put(url: String, is: InputStream, length: Option[Long]): HttpResponse[String] = {
-    Http(url)
+    httpRequest(url)
       .method("PUT")
       .options({ conn =>
         conn.setDoOutput(true)
@@ -70,34 +62,25 @@ class HttpClient(apiKey: Option[String]) {
         val os = conn.getOutputStream
         copy(is, os)
       })
-      .header("User-Agent", userAgent)
-      .header("Authorization", apiKey.orNull)
       .header("Accept","application/json")
-      .timeout(connTimeout, readTimeout)
       .asString
   }
 
   // DELETE
   def delete(url: String): HttpResponse[String] = {
-    Http(url)
+    httpRequest(url)
       .method("DELETE")
-      .header("User-Agent", userAgent)
-      .header("Authorization", apiKey.orNull)
       .header("Accept","application/json")
-      .timeout(connTimeout, readTimeout)
       .asString
   }
 
   // PATCH
   def patch(url: String, data: String): HttpResponse[String] = {
-    Http(url)
+    httpRequest(url)
       .postData(data)
       .method("PATCH")
       .header("Content-Type", "application/json")
-      .header("User-Agent", userAgent)
-      .header("Authorization", apiKey.orNull)
       .header("Accept","application/json")
-      .timeout(connTimeout, readTimeout)
       .asString
   }
 
