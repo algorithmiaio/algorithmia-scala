@@ -3,16 +3,14 @@ algorithmia-scala
 
 Scala client for accessing Algorithmia's algorithm marketplace and data APIs.
 
-[![Latest Release](https://img.shields.io/maven-central/v/com.algorithmia/algorithmia-scala.svg)](http://repo1.maven.org/maven2/com/algorithmia/algorithmia-client/)
+[![Latest Release](https://img.shields.io/maven-central/v/com.algorithmia/algorithmia-scala_2.11.svg)](http://repo1.maven.org/maven2/com/algorithmia/algorithmia-scala_2.11/)
 
 ## Getting started
 
 The Algorithmia scala client is published to Maven central and can be added as a dependency via:
 
 ```scala
-libraryDependencies ++= Seq(
-  "com.algorithmia" %% "algorithmia-scala" % "1.0.0"
-)
+libraryDependencies += "com.algorithmia" %% "algorithmia-scala" % "0.9.4"
 ```
 
 Instantiate a client using your API Key:

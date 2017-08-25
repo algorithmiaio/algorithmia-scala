@@ -16,3 +16,6 @@ libraryDependencies ++= Seq(
   "junit" % "junit" % "4.12" % Test,
   "org.specs2" %% "specs2" % "3.7" % Test
 )
+
+// Build for multiple scala versions
+crossScalaVersions := Seq("2.11.11", "2.12.3")
