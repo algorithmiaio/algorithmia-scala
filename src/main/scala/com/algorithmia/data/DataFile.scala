@@ -4,8 +4,6 @@ import com.algorithmia._
 import java.io.{File, FileInputStream, InputStream}
 import java.nio.file.{Files, StandardCopyOption}
 
-import scala.io.Source
-
 class DataFile(client: AlgorithmiaClient, dataUrl: String) extends DataObject(client, dataUrl, DataFileType) {
 
   override def exists: Boolean = {

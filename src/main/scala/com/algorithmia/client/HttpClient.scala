@@ -1,7 +1,6 @@
 package com.algorithmia.client
 
 import java.io.{InputStream, OutputStream}
-import java.net.HttpURLConnection
 
 import scalaj.http._
 

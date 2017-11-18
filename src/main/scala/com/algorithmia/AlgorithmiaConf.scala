@@ -1,8 +1,5 @@
 package com.algorithmia
 
-import com.algorithmia.algo._
-import com.algorithmia.data._
-
 object AlgorithmiaConf {
   private val defaultApiAddress: String = "https://api.algorithmia.com"
 

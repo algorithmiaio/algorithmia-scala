@@ -1,8 +1,5 @@
 package com.algorithmia.algo
 
-import play.api.libs.json._
-import scala.concurrent.{Await, ExecutionContext}
-
 /**
  * PipeIO uses scala magic to enable unix-style piping to algorithms.
  * input | algo1 | algo2

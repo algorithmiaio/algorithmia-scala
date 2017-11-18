@@ -7,8 +7,6 @@ import play.api.libs.json._
 
 class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObject(client, dataUrl, DataDirectoryType) {
 
-  private val defaultAcl = DataAcl(read = DataPrivate)
-
   override def exists: Boolean = {
     client.http.head(url).code == 200
   }
