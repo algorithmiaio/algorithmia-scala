@@ -1,7 +1,7 @@
 name := "algorithmia-scala"
 organization := "com.algorithmia"
 
-version := "0.9.5"
+version := "0.9.6-SNAPSHOT"
 
 scalaVersion := "2.11.12"
 
