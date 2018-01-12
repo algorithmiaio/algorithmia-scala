@@ -89,9 +89,9 @@ API errors will result in the call to `pipe` throwing `APIException`.
 Errors that occur durring algorithm execution will result in `AlgorithmException` when attempting to read the response.
 
 ```scala
-val algo = client.algo('util/whoopsWrongAlgo')
+val algo = client.algo("util/whoopsWrongAlgo")
 try {
-    val result = algo.pipe('Hello, world!')
+    val result = algo.pipe("Hello, world!")
     val output = result.asString
 } catch {
   case e: Exception => println("API Exception: " e.getMessage)
