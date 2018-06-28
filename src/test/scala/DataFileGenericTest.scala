@@ -4,7 +4,6 @@ import com.algorithmia.Algorithmia
 import com.algorithmia.data._
 import org.junit.Assert
 import org.specs2.mutable._
-import scala.sys.process._
 
 abstract class DataFileGenericTest extends Specification {
   def getFullPath(thing: String): String
