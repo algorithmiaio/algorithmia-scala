@@ -19,8 +19,8 @@ abstract class DataFileGenericTest extends Specification {
   val largeFile = new File(largeFileName)
   this.synchronized {
     if (!largeFile.exists) {
-      val procBuilder = new ProcessBuilder("dd", "if=/dev/zero", "of=" + largeFileName, "bs=1G", "count=3")
-      Assert.assertEquals(procBuilder.start.waitFor, 0)
+      val tempFile = new RandomAccessFile(largeFile, "w")
+      tempFile.setLength(3221225472L)
     }
   }
   "test file" should {
