@@ -2,7 +2,6 @@ import java.io._
 import java.util.Scanner
 import com.algorithmia.Algorithmia
 import com.algorithmia.data._
-import org.junit.Assert
 import org.specs2.mutable._
 
 abstract class DataFileGenericTest extends Specification {
@@ -19,7 +18,7 @@ abstract class DataFileGenericTest extends Specification {
   val largeFile = new File(largeFileName)
   this.synchronized {
     if (!largeFile.exists) {
-      val tempFile = new RandomAccessFile(largeFile, "w")
+      val tempFile = new RandomAccessFile(largeFile, "rw")
       tempFile.setLength(3221225472L)
     }
   }
