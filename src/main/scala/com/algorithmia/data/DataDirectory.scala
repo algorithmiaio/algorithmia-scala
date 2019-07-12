@@ -58,7 +58,7 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
       val responseJson = Json.parse(response.body)
       Json.fromJson[PermissionResponse](responseJson) match {
         case JsSuccess(listing, _) => listing.acl
-        case JsError(_) => throw new IOException("Failed to parse permissions")
+        case error: JsError => throw new IOException(s"Failed to parse permissions $error $responseJson")
       }
     } else {
       throw new IOException("Failed to get permissions, status code " + response.code)

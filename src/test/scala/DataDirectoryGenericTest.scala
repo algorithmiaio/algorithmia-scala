@@ -1,6 +1,5 @@
 import com.algorithmia.Algorithmia
 import com.algorithmia.data._
-import java.util
 import org.specs2.mutable.Specification
 
 abstract class DataDirectoryGenericTest extends Specification {
@@ -85,7 +84,7 @@ abstract class DataDirectoryGenericTest extends Specification {
         dir.create()
         var i = 0
         while (i < NUM_FILES) {
-          dir.file(i + EXTENSION).put(i + "")
+          dir.file(s"$i$EXTENSION").put(s"$i")
           i += 1
         }
       }

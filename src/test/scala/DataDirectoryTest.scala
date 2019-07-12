@@ -1,7 +1,5 @@
 import com.algorithmia.Algorithmia
 import com.algorithmia.data._
-import org.junit.Test
-import org.junit.Assert
 
 object DataDirectoryTest {
   private val pathPrefix = ".my/"
