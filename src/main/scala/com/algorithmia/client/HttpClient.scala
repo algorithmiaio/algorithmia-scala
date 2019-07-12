@@ -57,7 +57,10 @@ class HttpClient(apiKey: Option[String]) {
       .method("PUT")
       .options({ conn =>
         conn.setDoOutput(true)
-        length.foreach(l => conn.setFixedLengthStreamingMode(l))
+        length match {
+          case Some(l) => conn.setFixedLengthStreamingMode(l)
+          case None => conn.setChunkedStreamingMode(10 * 1024 * 1024) // 10mb chunked
+        }
         val os = conn.getOutputStream
         copy(is, os)
       })
