@@ -10,7 +10,7 @@ Scala client for accessing Algorithmia's algorithm marketplace and data APIs.
 The Algorithmia scala client is published to Maven central and can be added as a dependency via:
 
 ```scala
-libraryDependencies += "com.algorithmia" %% "algorithmia-scala" % "0.9.5"
+libraryDependencies += "com.algorithmia" %% "algorithmia-scala" % "0.9.6"
 ```
 
 Instantiate a client using your API Key:
