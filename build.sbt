@@ -15,7 +15,8 @@ libraryDependencies ++= Seq(
   "commons-io" % "commons-io" % "2.6" % Test,
   "junit" % "junit" % "4.12" % Test,
   // "org.specs2" %% "specs2" % "3.7" % Test
-  "com.typesafe.play" %% "play-specs2" % "2.7.3" % Test
+  "com.typesafe.play" %% "play-specs2" % "2.7.3" % Test,
+  "org.apache.commons" % "commons-lang3" % "3.9"
 )
 
 // Build for multiple scala versions
