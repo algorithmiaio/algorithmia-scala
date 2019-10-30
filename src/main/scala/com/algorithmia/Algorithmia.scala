@@ -2,9 +2,8 @@ package com.algorithmia
 
 import com.algorithmia.algo._
 import com.algorithmia.data._
-import com.algorithmia.handler.{AbstractAlgorithm, Handler}
-
-import scala.util.Try
+import com.algorithmia.handler.AbstractAlgorithm._
+import com.algorithmia.handler.Handler
 
 object Algorithmia {
 
@@ -19,6 +18,6 @@ object Algorithmia {
   def file(dataUrl: String): DataFile = defaultClient.file(dataUrl)
 
   // Helper method to interact with the algorithm development handler
-  def handler[I, O](algoDef: AbstractAlgorithm[I, O]): Handler[I, O] = new Handler(algoDef)
+  def handler[I, O](algoDef: AbstractAlgorithm[I, O]): Handler[I, O] = Handler(algoDef)
 
 }

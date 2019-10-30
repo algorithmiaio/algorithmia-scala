@@ -1,17 +1,27 @@
 package com.algorithmia.handler
 import play.api.libs.json._
+import scala.reflect.runtime.universe._
 
 import scala.util.{Failure, Success, Try}
 
-trait AbstractAlgorithm[I <: AnyVal, O <: AnyVal] {
-  def apply(input:I): Try[O]
-  def load(): Try[Unit] = Success(())
-  implicit def inputReader: Reads[I] = Try(implicitly[Reads[I]]) match {
-    case Failure(_) => Json.reads[I]
-    case Success(s: Reads[I]) => s
-  }
-  implicit def outputWriter: Writes[O] = Try(implicitly[Writes[O]]) match {
-    case Failure(_) => Json.writes[O]
-    case Success(s: Writes[O]) => s
-  }
-}
+
+ object AbstractAlgorithm {
+
+   trait AbstractAlgorithm[-I, +O] {
+     def apply(input: I): Try[O]
+
+     def load(): Try[Unit] = Success(())
+   }
+
+   implicit class WeakTypeDetector[I: WeakTypeTag](related: AbstractAlgorithm[I, _]) {
+     def getType: Type = {
+       weakTypeOf[I]
+     }
+   }
+   implicit class TypeDetector[I: TypeTag](related: AbstractAlgorithm[I, _]) {
+     def getType: Type = {
+       typeOf[I]
+     }
+   }
+
+ }
