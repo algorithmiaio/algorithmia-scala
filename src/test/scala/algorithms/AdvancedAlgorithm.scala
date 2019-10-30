@@ -5,19 +5,19 @@ import play.api.libs.json.Json
 
 import scala.util.Try
 
-case class InputFields(foo: String)
-case class OutputFields(bar: String, num: Int)
+case class AlgorithmInput(foo: String)
+case class AlgorithmOutput(bar: String, num: Int)
 
-object InputFields{
-  implicit val r = Json.reads[InputFields]
+object AlgorithmInput{
+  implicit val r = Json.reads[AlgorithmInput]
 }
-object OutputFields{
-  implicit val w = Json.writes[OutputFields]
+object AlgorithmOutput{
+  implicit val w = Json.writes[AlgorithmOutput]
 }
 
-class AdvancedAlgorithm extends AbstractAlgorithm[InputFields, OutputFields]{
+class AdvancedAlgorithm extends AbstractAlgorithm[AlgorithmInput, AlgorithmOutput]{
 
-  override def apply(input: InputFields): Try[OutputFields] = Try(OutputFields( s"hello ${input.foo}", 25))
+  override def apply(input: AlgorithmInput): Try[AlgorithmOutput] = Try(AlgorithmOutput( s"hello ${input.foo}", 25))
 }
 
 

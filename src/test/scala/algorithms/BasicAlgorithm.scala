@@ -12,8 +12,8 @@ class BasicAlgorithm extends AbstractAlgorithm[String, String]{
 
 
 object BasicAlgorithm {
-  val handler = Algorithmia.handler(new BasicAlgorithm)
-  def main(args: Array[String]): Unit = {
+  def run(): Unit = {
+    val handler = Algorithmia.handler(new BasicAlgorithm)
     handler.serve()
   }
 }

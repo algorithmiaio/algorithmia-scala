@@ -2,7 +2,6 @@ package com.algorithmia.handler
 
 import com.algorithmia.handler.AbstractAlgorithm._
 import play.api.libs.json.{Reads, Writes}
-
 import scala.reflect.runtime.universe._
 import scala.util.{Failure, Success, Try}
 case class Handler[I: WeakTypeTag, O](algorithm: AbstractAlgorithm[I, O]) {

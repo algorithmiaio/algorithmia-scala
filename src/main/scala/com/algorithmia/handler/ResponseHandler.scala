@@ -25,7 +25,8 @@ case class ResponseHandler[O](){
   }
 
   def writeResponseToPipe(output: O)(implicit  writer: Writes[O]): Try[Unit] = {
-    val serialized = Json.toJson(output)
+    val response = Response(Metadata("text"), output)
+    val serialized = Json.toJson(response)
     write(serialized.toString())
   }
 }
