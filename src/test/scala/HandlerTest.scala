@@ -1,8 +1,8 @@
 import java.io.ByteArrayInputStream
 
+import algorithms._
 import org.specs2.mutable.Specification
 import org.specs2.specification.{AfterEach, BeforeEach}
-import algorithms._
 
 import scala.io.{BufferedSource, Source}
 
@@ -13,6 +13,7 @@ class HandlerTest extends Specification with BeforeEach with AfterEach {
 
   val PIPE: String = "/tmp/algoout"
   var pipeFile: BufferedSource = _
+
   override protected def before: Any = {
     val p = Runtime.getRuntime.exec(s"touch $PIPE")
     p.waitFor

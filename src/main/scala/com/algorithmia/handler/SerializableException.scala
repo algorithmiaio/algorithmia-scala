@@ -13,5 +13,6 @@ object SerializableException {
     val errorType = e.getClass.toString
     SerializableException(message, stackTrace, errorType)
   }
+
   implicit def writes: Writes[SerializableException] = Json.writes[SerializableException]
 }

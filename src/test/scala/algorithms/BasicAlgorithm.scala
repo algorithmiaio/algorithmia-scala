@@ -5,7 +5,7 @@ import com.algorithmia.handler.AbstractAlgorithm
 
 import scala.util.Try
 
-class BasicAlgorithm extends AbstractAlgorithm[String, String]{
+class BasicAlgorithm extends AbstractAlgorithm[String, String] {
 
   override def apply(input: String): Try[String] = Try(s"hello ${input}")
 }
