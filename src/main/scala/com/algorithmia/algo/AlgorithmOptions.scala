@@ -1,8 +1,8 @@
 package com.algorithmia.algo
 
 /**
- * Output types: raw, void, default
- */
+  * Output types: raw, void, default
+  */
 sealed trait AlgorithmOutputType {
   def parameter: String
 }
@@ -18,9 +18,9 @@ case object OutputDefault extends AlgorithmOutputType {
 }
 
 object AlgorithmOutputType {
-	def fromString(outputType: String): AlgorithmOutputType = outputType match {
-		case "raw" => OutputRaw
-		case "void" => OutputVoid
-		case _ => OutputDefault
-	}
+  def fromString(outputType: String): AlgorithmOutputType = outputType match {
+    case "raw" => OutputRaw
+    case "void" => OutputVoid
+    case _ => OutputDefault
+  }
 }

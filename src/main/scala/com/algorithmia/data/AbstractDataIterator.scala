@@ -3,9 +3,9 @@ package com.algorithmia.data
 import java.util.NoSuchElementException
 
 /**
- * Implements an Iterator over the results of an algorithmia data api listing.
- * Handles API paging.
- */
+  * Implements an Iterator over the results of an algorithmia data api listing.
+  * Handles API paging.
+  */
 abstract class AbstractDataIterator[T](val dir: DataDirectory) extends Iterator[T] {
 
   protected var marker: Option[String] = None
@@ -16,7 +16,7 @@ abstract class AbstractDataIterator[T](val dir: DataDirectory) extends Iterator[
   override def hasNext: Boolean = {
     attemptToLoadFirstPage()
     (offset < children.size) || // We have data in memory
-      (offset >= children.size && marker.isDefined) // There is another page to fetch
+    (offset >= children.size && marker.isDefined) // There is another page to fetch
   }
 
   override def next(): T = {

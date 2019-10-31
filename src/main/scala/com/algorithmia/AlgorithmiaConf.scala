@@ -6,15 +6,15 @@ object AlgorithmiaConf {
   val apiAddress: String = getConfigValue("ALGORITHMIA_API").getOrElse(defaultApiAddress)
 
   /**
-   * Get a value from java properties or system envvar
-   */
+    * Get a value from java properties or system envvar
+    */
   private def getConfigValue(configKey: String): Option[String] = {
     val envVal = System.getenv(configKey)
     val propVal = System.getProperty(configKey)
 
-    if(propVal != null && propVal.trim().length() > 0) {
+    if (propVal != null && propVal.trim().length() > 0) {
       Some(propVal.trim)
-    } else if(envVal != null && envVal.trim().length() > 0) {
+    } else if (envVal != null && envVal.trim().length() > 0) {
       Some(envVal.trim)
     } else {
       None

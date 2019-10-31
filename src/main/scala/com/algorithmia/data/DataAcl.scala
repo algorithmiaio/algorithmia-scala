@@ -21,12 +21,13 @@ case object DataPrivate extends DataAclType {
 object DataAclType {
   implicit object DataAclTypeReads extends Reads[DataAclType] {
     def reads(json: JsValue): JsResult[DataAclType] = json match {
-      case JsArray(arr) => arr.headOption match {
-        case Some(JsString("user://*")) => JsSuccess(DataPublic)
-        case Some(JsString("algo://.my/*")) => JsSuccess(DataMyAlgorithms)
-        case None => JsSuccess(DataPrivate)
-        case _ => JsError(s"unexpected data acl: $json")
-      }
+      case JsArray(arr) =>
+        arr.headOption match {
+          case Some(JsString("user://*")) => JsSuccess(DataPublic)
+          case Some(JsString("algo://.my/*")) => JsSuccess(DataMyAlgorithms)
+          case None => JsSuccess(DataPrivate)
+          case _ => JsError(s"unexpected data acl: $json")
+        }
       case _ => JsError(s"unexpected data acl: $json")
     }
   }
