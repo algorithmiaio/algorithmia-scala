@@ -1,6 +1,5 @@
 package algorithms
 
-import com.algorithmia.Algorithmia
 import com.algorithmia.handler.AbstractAlgorithm
 import play.api.libs.json.Json
 
@@ -18,7 +17,7 @@ object AlgorithmOutput {
   implicit val w = Json.writes[AlgorithmOutput]
 }
 
-class AdvancedAlgorithm extends AbstractAlgorithm[AlgorithmInput, AlgorithmOutput] {
+class Algorithm2 extends AbstractAlgorithm[AlgorithmInput, AlgorithmOutput] {
 
   var loadedValue: Option[Int] = None
 
@@ -32,13 +31,5 @@ class AdvancedAlgorithm extends AbstractAlgorithm[AlgorithmInput, AlgorithmOutpu
 
   override def load(): Try[Unit] = Try {
     loadedValue = Some(25)
-  }
-}
-
-
-object AdvancedAlgorithm {
-  def run(): Unit = {
-    val handler = Algorithmia.handler(new AdvancedAlgorithm)
-    handler.serve()
   }
 }

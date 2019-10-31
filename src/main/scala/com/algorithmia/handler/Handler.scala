@@ -26,8 +26,10 @@ case class Handler[I, O](algorithm: AbstractAlgorithm[I, O]) {
       case Success(_) =>
         for (line <- lines) {
           requestHandler.processRequest(line)
-            .flatMap(i => algorithm.apply(i))
-            .map(output => responseHandler.writeResponseToPipe(output))
+            .flatMap(i => algorithm.apply(i)) match {
+            case Failure(exception) => responseHandler.writeErrorToPipe(exception)
+            case Success(output) => responseHandler.writeResponseToPipe(output)
+          }
         }
     }
   }
