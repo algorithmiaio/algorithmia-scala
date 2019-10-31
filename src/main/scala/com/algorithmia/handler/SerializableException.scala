@@ -6,7 +6,6 @@ import play.api.libs.json._
 case class Content(message: String, stacktrace: String, error_type: String)
 case class SerializableException(error: Content)
 
-
 object SerializableException {
   def fromException(e: Throwable): SerializableException = {
     val stackTrace = ExceptionUtils.getStackTrace(e)

@@ -10,11 +10,14 @@ import scala.util.Try
 case class ResponseHandler[O]() {
   val FIFOPATH = "/tmp/algoout"
 
-
   private def write(data: String): Try[Unit] = {
     Try(new PrintStream(new FileOutputStream(this.FIFOPATH, true)))
-      .map({ s => s.println(data); s })
-      .map({ s => s.flush(); s })
+      .map({ s =>
+        s.println(data); s
+      })
+      .map({ s =>
+        s.flush(); s
+      })
       .map(_.close())
   }
 

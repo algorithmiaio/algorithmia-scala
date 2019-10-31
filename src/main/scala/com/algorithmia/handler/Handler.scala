@@ -10,14 +10,14 @@ case class Handler[I, O](algorithm: AbstractAlgorithm[I, O]) {
   val requestHandler: RequestHandler[I] = RequestHandler()
   val responseHandler: ResponseHandler[O] = ResponseHandler()
 
-
   private def load(): Try[Unit] = {
-    algorithm.load().map(_ => {
-      System.out.println("PIPE_INIT_COMPLETE")
-      System.out.flush()
-    })
+    algorithm
+      .load()
+      .map(_ => {
+        System.out.println("PIPE_INIT_COMPLETE")
+        System.out.flush()
+      })
   }
-
 
   def serve()(implicit r: Reads[I], w: Writes[O], o: ClassTag[O], i: ClassTag[I]): Unit = {
     val lines = io.Source.stdin.getLines()
@@ -25,7 +25,8 @@ case class Handler[I, O](algorithm: AbstractAlgorithm[I, O]) {
       case Failure(exception) => responseHandler.writeErrorToPipe(exception)
       case Success(_) =>
         for (line <- lines) {
-          requestHandler.processRequest(line)
+          requestHandler
+            .processRequest(line)
             .flatMap(i => algorithm.apply(i)) match {
             case Failure(exception) => responseHandler.writeErrorToPipe(exception)
             case Success(output) => responseHandler.writeResponseToPipe(output)
