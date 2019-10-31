@@ -14,7 +14,8 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
   def getType: DataObjectType = DataDirectoryType
 
   private case class CreateDirectoryRequest(name: String, acl: Option[DataAcl])
-  private implicit val createDirectoryRequestWrites: Writes[CreateDirectoryRequest] = Json.writes[CreateDirectoryRequest]
+  private implicit val createDirectoryRequestWrites: Writes[CreateDirectoryRequest] =
+    Json.writes[CreateDirectoryRequest]
 
   def create(dataAcl: Option[DataAcl] = None): Unit = {
     val req = CreateDirectoryRequest(getName, dataAcl)
@@ -66,7 +67,8 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
   }
 
   private case class UpdateDirectoryRequest(acl: DataAcl)
-  private implicit val updateDirectoryResponseWrites: Writes[UpdateDirectoryRequest] = Json.writes[UpdateDirectoryRequest]
+  private implicit val updateDirectoryResponseWrites: Writes[UpdateDirectoryRequest] =
+    Json.writes[UpdateDirectoryRequest]
 
   def updatePermissions(dataAcl: DataAcl): Boolean = {
     val req = UpdateDirectoryRequest(dataAcl)

@@ -54,10 +54,13 @@ case class AlgoSuccess(result: JsValue, metadata: Metadata, rawOutput: String) e
 
 case class AlgoFailure(message: String, metadata: Metadata, rawOutput: String) extends AlgoResponse {
   override def isSuccess: Boolean = false
-  override def as[T](implicit reads: Reads[T]): T = throw new ClassCastException("Algorithm returned an error, and cannot be converted to type")
+  override def as[T](implicit reads: Reads[T]): T =
+    throw new ClassCastException("Algorithm returned an error, and cannot be converted to type")
   override def asOpt[T](implicit reads: Reads[T]): Option[T] = None
-  override def asString: String = throw new ClassCastException("Algorithm returned an error, and cannot be converted to  string")
-  override def asBytes: Array[Byte] = throw new ClassCastException("Algorithm returned an error, and cannot be converted to byte array")
+  override def asString: String =
+    throw new ClassCastException("Algorithm returned an error, and cannot be converted to  string")
+  override def asBytes: Array[Byte] =
+    throw new ClassCastException("Algorithm returned an error, and cannot be converted to byte array")
   override def map[T](f: AlgoSuccess => T): Option[T] = None
 }
 
@@ -74,8 +77,10 @@ object AlgoResponse {
     val json = Json.parse(rawOutput)
     Json.fromJson[AlgoResponseRaw](json) match {
       case JsSuccess(AlgoResponseRaw(result, None, metadata), _) => AlgoSuccess(result, metadata.metadata, rawOutput)
-      case JsSuccess(AlgoResponseRaw(_, Some(error), metadata), _) => AlgoFailure(error.message, metadata.metadata, rawOutput)
-      case JsError(_) => AlgoFailure("Failed to parse algorithm response", Metadata(0, ContentTypeVoid, None), rawOutput)
+      case JsSuccess(AlgoResponseRaw(_, Some(error), metadata), _) =>
+        AlgoFailure(error.message, metadata.metadata, rawOutput)
+      case JsError(_) =>
+        AlgoFailure("Failed to parse algorithm response", Metadata(0, ContentTypeVoid, None), rawOutput)
     }
   }
 
