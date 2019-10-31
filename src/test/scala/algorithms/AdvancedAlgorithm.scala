@@ -1,6 +1,6 @@
 package algorithms
 import com.algorithmia.Algorithmia
-import com.algorithmia.handler.AbstractAlgorithm._
+import com.algorithmia.handler.AbstractAlgorithm
 import play.api.libs.json.Json
 
 import scala.util.Try

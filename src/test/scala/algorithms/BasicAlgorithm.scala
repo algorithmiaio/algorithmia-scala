@@ -1,7 +1,7 @@
 package algorithms
 
 import com.algorithmia.Algorithmia
-import com.algorithmia.handler.AbstractAlgorithm.AbstractAlgorithm
+import com.algorithmia.handler.AbstractAlgorithm
 
 import scala.util.Try
 

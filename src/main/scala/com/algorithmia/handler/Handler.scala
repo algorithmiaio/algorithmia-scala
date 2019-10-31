@@ -1,6 +1,5 @@
 package com.algorithmia.handler
 
-import com.algorithmia.handler.AbstractAlgorithm._
 import play.api.libs.json.{Reads, Writes}
 
 import scala.reflect.ClassTag

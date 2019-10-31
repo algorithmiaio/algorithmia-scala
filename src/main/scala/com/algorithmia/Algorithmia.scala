@@ -2,7 +2,7 @@ package com.algorithmia
 
 import com.algorithmia.algo._
 import com.algorithmia.data._
-import com.algorithmia.handler.AbstractAlgorithm._
+import com.algorithmia.handler.AbstractAlgorithm
 import com.algorithmia.handler.Handler
 
 object Algorithmia {
