@@ -4,7 +4,7 @@ import com.algorithmia.{AlgorithmiaConf, AlgorithmiaClient}
 import play.api.libs.json._
 import scala.concurrent.duration.{Duration, FiniteDuration, SECONDS}
 
-class Algorithm(client: AlgorithmiaClient, algoUrl: String, val options: Map[String,String] = Map.empty) {
+class Algorithm(client: AlgorithmiaClient, algoUrl: String, val options: Map[String, String] = Map.empty) {
   private val trimmedPath: String = algoUrl.replaceAll("^algo://|^/", "")
   val url: String = AlgorithmiaConf.apiAddress + "/v1/algo/" + trimmedPath
 
@@ -19,10 +19,10 @@ class Algorithm(client: AlgorithmiaClient, algoUrl: String, val options: Map[Str
   }
 
   /**
-   * Set algorithm options, to be passed into algorithmia as query parameters.
-   * We use "with" instead of "set" because the Algorithm object is immutable.
-   */
-  def withOptions(opts: (String,String)*): Algorithm = {
+    * Set algorithm options, to be passed into algorithmia as query parameters.
+    * We use "with" instead of "set" because the Algorithm object is immutable.
+    */
+  def withOptions(opts: (String, String)*): Algorithm = {
     new Algorithm(client, algoUrl, options ++ opts)
   }
 

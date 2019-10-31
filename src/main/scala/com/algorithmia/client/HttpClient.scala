@@ -40,7 +40,7 @@ class HttpClient(apiKey: Option[String]) {
     httpRequest(url)
       .postData(data)
       .header("Content-Type", "application/json")
-      .header("Accept","application/json")
+      .header("Accept", "application/json")
       .asString
   }
 
@@ -48,7 +48,7 @@ class HttpClient(apiKey: Option[String]) {
   def put(url: String, data: Array[Byte]): HttpResponse[String] = {
     httpRequest(url)
       .put(data)
-      .header("Accept","application/json")
+      .header("Accept", "application/json")
       .asString
   }
 
@@ -64,7 +64,7 @@ class HttpClient(apiKey: Option[String]) {
         val os = conn.getOutputStream
         copy(is, os)
       })
-      .header("Accept","application/json")
+      .header("Accept", "application/json")
       .asString
   }
 
@@ -72,7 +72,7 @@ class HttpClient(apiKey: Option[String]) {
   def delete(url: String): HttpResponse[String] = {
     httpRequest(url)
       .method("DELETE")
-      .header("Accept","application/json")
+      .header("Accept", "application/json")
       .asString
   }
 
@@ -82,17 +82,17 @@ class HttpClient(apiKey: Option[String]) {
       .postData(data)
       .method("PATCH")
       .header("Content-Type", "application/json")
-      .header("Accept","application/json")
+      .header("Accept", "application/json")
       .asString
   }
 
   /**
-   * Use our own stream copy instead of adding dependency on commons io
-   */
+    * Use our own stream copy instead of adding dependency on commons io
+    */
   private def copy(is: InputStream, os: OutputStream): Unit = {
     val buffer = new Array[Byte](1024)
     var len = is.read(buffer)
-    while( len != -1 ) {
+    while (len != -1) {
       os.write(buffer, 0, len)
       len = is.read(buffer)
     }

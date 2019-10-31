@@ -54,7 +54,7 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
   def getPermissions: DataAcl = {
     // To get permissions, list the directory and extract the acl field
     val response = client.http.get(url + "?acl=true")
-    if(response.code == 200) {
+    if (response.code == 200) {
       val responseJson = Json.parse(response.body)
       Json.fromJson[PermissionResponse](responseJson) match {
         case JsSuccess(listing, _) => listing.acl
@@ -78,10 +78,10 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
   case class FileMetadata(filename: String)
   case class DirectoryMetadata(name: String)
   case class DirectoryListResponse(
-    files: Option[List[FileMetadata]],
-    folders: Option[List[DirectoryMetadata]],
-    marker: Option[String],
-    acl: Option[DataAcl]
+      files: Option[List[FileMetadata]],
+      folders: Option[List[DirectoryMetadata]],
+      marker: Option[String],
+      acl: Option[DataAcl]
   )
   private implicit val fileMetadataReads: Reads[FileMetadata] = Json.reads[FileMetadata]
   private implicit val directoryMetadataReads: Reads[DirectoryMetadata] = Json.reads[DirectoryMetadata]
@@ -95,14 +95,14 @@ class DataDirectory(client: AlgorithmiaClient, dataUrl: String) extends DataObje
     */
   def getPage(marker: Option[String], getAcl: Boolean): DirectoryListResponse = {
     val markerParam = marker.map(m => "marker=" + URLEncoder.encode(m, "UTF-8"))
-    val aclParam = if(getAcl) Some("marker=true") else None
+    val aclParam = if (getAcl) Some("marker=true") else None
     val params1 = (markerParam ++ aclParam).mkString("&")
-    val params = if(params1.isEmpty) "" else "?" + params1
+    val params = if (params1.isEmpty) "" else "?" + params1
     val response = client.http.get(url + params)
-    if(response.code == 200) {
+    if (response.code == 200) {
       val responseJson = Json.parse(response.body)
       Json.fromJson[DirectoryListResponse](responseJson) match {
-        case JsSuccess(listing,_) => listing
+        case JsSuccess(listing, _) => listing
         case JsError(errors) => throw new IOException("Failed to parse listing page: " + errors)
       }
     } else {
