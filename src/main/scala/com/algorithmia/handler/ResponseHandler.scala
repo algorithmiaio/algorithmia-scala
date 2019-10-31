@@ -5,6 +5,7 @@ import java.io.PrintStream
 
 import play.api.libs.json.{Json, Writes}
 
+import scala.reflect.ClassTag
 import scala.util.Try
 
 case class ResponseHandler[O](){
@@ -24,8 +25,12 @@ case class ResponseHandler[O](){
     write(serialized.toString())
   }
 
-  def writeResponseToPipe(output: O)(implicit  writer: Writes[O]): Try[Unit] = {
-    val response = Response(Metadata("text"), output)
+  def writeResponseToPipe(output: O)(implicit  writer: Writes[O], obj: ClassTag[O]): Try[Unit] = {
+    val metadata = output match {
+      case _: String => "text"
+      case _ => "json"
+    }
+    val response = Response(Metadata(metadata), output)
     val serialized = Json.toJson(response)
     write(serialized.toString())
   }

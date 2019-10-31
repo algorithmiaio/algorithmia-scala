@@ -17,13 +17,25 @@ object AlgorithmOutput{
 
 class AdvancedAlgorithm extends AbstractAlgorithm[AlgorithmInput, AlgorithmOutput]{
 
-  override def apply(input: AlgorithmInput): Try[AlgorithmOutput] = Try(AlgorithmOutput( s"hello ${input.foo}", 25))
+  var loadedValue: Option[Int] = None
+
+  override def apply(input: AlgorithmInput): Try[AlgorithmOutput] = Try{
+    val bar =  s"hello ${input.foo}"
+    loadedValue match {
+      case Some(value) => AlgorithmOutput( bar, value)
+      case None => AlgorithmOutput(bar, -1)
+    }
+  }
+
+  override def load(): Try[Unit] = Try {
+    loadedValue = Some(25)
+  }
 }
 
 
 object AdvancedAlgorithm {
-  val handler = Algorithmia.handler(new AdvancedAlgorithm)
-  def main(args: Array[String]): Unit = {
+  def run(): Unit = {
+    val handler = Algorithmia.handler(new AdvancedAlgorithm)
     handler.serve()
   }
 }

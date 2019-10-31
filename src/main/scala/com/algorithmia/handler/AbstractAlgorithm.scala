@@ -10,10 +10,4 @@ import scala.util.{Success, Try}
      def apply(input: I): Try[O]
      def load(): Try[Unit] = Success(())
    }
-
-   implicit class WeakTypeDetector[I: WeakTypeTag](related: AbstractAlgorithm[I, _]) {
-     def getType: Type = {
-       weakTypeOf[I]
-     }
-   }
  }
