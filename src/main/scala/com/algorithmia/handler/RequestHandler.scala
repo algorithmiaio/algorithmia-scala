@@ -7,17 +7,12 @@ import scala.util._
 
 case class RequestHandler[I]() {
 
-  def convertToInput(input: JsValue)(implicit s: Reads[I], obj: ClassTag[I]): Try[I] = {
-    Json.fromJson[I](input).asOpt match {
-      case Some(value) => Success(value)
-      case None => Failure(new Exception(s"Unable to convert ${input} into ${obj}"))
-    }
-  }
-
   def processRequest(line: String)(implicit s: Reads[I], obj: ClassTag[I]): Try[I] = {
-    val jsvalue = Json.parse(line)
-    (jsvalue \ "data") match {
-      case JsDefined(value) => convertToInput(value)
+    (Json.parse(line) \ "data") match {
+      case JsDefined(value) => Json.fromJson[I](value) match {
+        case JsSuccess(value, _) => Success(value)
+        case JsError(_) =>Failure(new Exception(s"Unable to convert ${line} into ${obj}"))
+      }
       case JsUndefined() => Failure(new Exception(s"unable to find key 'data' in request json object:\n${line}"))
     }
   }
