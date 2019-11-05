@@ -13,12 +13,10 @@ case class ResponseHandler[O]() {
   private def write(data: String): Try[Unit] = {
     Try(new PrintStream(new FileOutputStream(this.FIFOPATH, true)))
       .map({ s =>
-        s.println(data); s
+        s.println(data)
+        s.flush()
+        s.close()
       })
-      .map({ s =>
-        s.flush(); s
-      })
-      .map(_.close())
   }
 
   def writeErrorToPipe(e: Throwable): Try[Unit] = {
