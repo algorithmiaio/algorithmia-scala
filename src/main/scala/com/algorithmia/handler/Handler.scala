@@ -19,7 +19,7 @@ case class Handler[I, O](algorithm: AbstractAlgorithm[I, O]) {
       })
   }
 
-  def serve()(implicit r: Reads[I], w: Writes[O], o: ClassTag[O], i: ClassTag[I]): Unit = {
+  def serve()(implicit r: Reads[I], w: Writes[O], i: ClassTag[I]): Unit = {
     val lines = io.Source.stdin.getLines()
     load() match {
       case Failure(exception) => responseHandler.writeErrorToPipe(exception)

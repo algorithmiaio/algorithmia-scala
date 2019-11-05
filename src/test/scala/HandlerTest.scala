@@ -34,7 +34,7 @@ class HandlerTest extends Specification with BeforeEach with AfterEach {
   def execute[I, O](
       input: String,
       algo: AbstractAlgorithm[I, O]
-  )(implicit r: Reads[I], w: Writes[O], o: ClassTag[O], i: ClassTag[I]): JsValue = {
+  )(implicit r: Reads[I], w: Writes[O], i: ClassTag[I]): JsValue = {
     System.setIn(new ByteArrayInputStream(input.getBytes(java.nio.charset.StandardCharsets.UTF_8.name)))
     val handler = Algorithmia.handler(algo)
     handler.serve()
