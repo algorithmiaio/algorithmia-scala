@@ -5,6 +5,9 @@ Scala client for accessing Algorithmia's algorithm marketplace and data APIs.
 
 [![Latest Release](https://img.shields.io/maven-central/v/com.algorithmia/algorithmia-scala_2.13.svg)](http://repo1.maven.org/maven2/com/algorithmia/algorithmia-scala_2.13/)
 
+## Algorithm Development
+For information regarding how to use the latest Scala Algorithmia Development Environment, please click [here.](development.md)
+
 ## Getting started
 
 The Algorithmia scala client is published to Maven central and can be added as a dependency via:
