@@ -123,8 +123,8 @@ intiates the conversation with Algorithmia.
 ## Things to note
 
 ### Types
-If you have a more complex Input/Output than a basic scala type, you should ensure that your Input types implement an [implicit reads](), and your Output types implement an [implicit writes](). 
-To see a full example check in our [examples](algorithm_examples.hello_world) directory.
+If you have a more complex Input/Output than a basic scala type, you should ensure that your Input types implement an [implicit reads](algorithm_examples/spark_mleap/src/main/scala/com/algorithmia/InputExample.scala), and your Output types implement an [implicit writes](algorithm_examples/spark_mleap/src/main/scala/com/algorithmia/OutputExample.scala). 
+To see a full example check in our [examples](algorithm_examples) directory.
 
 ### Testing
 We'll be building a better ergonomic experience around this, however for now if you want to run this on your laptop directly you'll need to create a fifo pipe called `algoout` in your system `/tmp` directory.
