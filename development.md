@@ -124,7 +124,7 @@ intiates the conversation with Algorithmia.
 
 ### Types
 If you have a more complex Input/Output than a basic scala type, you should ensure that your Input types implement an [implicit reads](), and your Output types implement an [implicit writes](). 
-To see a full example check in our [examples](examples) directory.
+To see a full example check in our [examples](algorithm_examples.hello_world) directory.
 
 ### Testing
 We'll be building a better ergonomic experience around this, however for now if you want to run this on your laptop directly you'll need to create a fifo pipe called `algoout` in your system `/tmp` directory.
