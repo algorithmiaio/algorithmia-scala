@@ -18,6 +18,7 @@ libraryDependencies ++= Seq(
   "junit" % "junit" % "4.12" % Test,
   // "org.specs2" %% "specs2" % "3.7" % Test
   "com.typesafe.play" %% "play-specs2" % "2.7.3" % Test,
+  "org.scalatest" %% "scalatest" % "3.2.2" % Test,
 )
 
 // Build for multiple scala versions
