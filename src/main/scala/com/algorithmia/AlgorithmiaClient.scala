@@ -13,4 +13,6 @@ case class AlgorithmiaClient(apiKey: Option[String]) {
 
   def file(dataUrl: String): DataFile = new DataFile(this, dataUrl)
 
+  def report_insights(input: String): AlgorithmiaInsights = new AlgorithmiaInsights(this, input)
+
 }
