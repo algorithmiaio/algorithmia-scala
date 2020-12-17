@@ -16,6 +16,8 @@ object Algorithmia {
   def algo(algoUrl: String): Algorithm = defaultClient.algo(algoUrl)
   def dir(dataUrl: String): DataDirectory = defaultClient.dir(dataUrl)
   def file(dataUrl: String): DataFile = defaultClient.file(dataUrl)
+  def admin(): Administrator = defaultClient.admin()
+
 
   // Helper method to interact with the algorithm development handler
   def handler[I, O](algoDef: AbstractAlgorithm[I, O]): Handler[I, O] = Handler(algoDef)
