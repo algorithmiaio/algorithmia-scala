@@ -3,7 +3,7 @@ organization := "com.algorithmia"
 
 version := "1.0.2"
 
-scalaVersion := "2.13.0"
+scalaVersion := "2.13.1"
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xlint")
 
