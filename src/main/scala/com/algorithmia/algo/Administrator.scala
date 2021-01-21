@@ -37,6 +37,38 @@ class Administrator(client: AlgorithmiaClient){
     }
   }
 
+  def updateOrganization(orgName:String, org:Organization):Boolean ={
+    val input = Json.toJson(org)
+    val response = this.client.http.put(url+s"/v1/organizations/${orgName}", input.toString.getBytes)
+      if (response.code == 204 ) {
+        true
+    } else {
+      throw new IOException("Failed to update organization , status code " + response.code)
+    }
+  }
+
+  def getOrganization(orgName:String):Organization ={
+    val response = this.client.http.get(url+s"/v1/organizations/${orgName}")
+    if (response.code == 200) {
+      val responseJson = Json.parse(response.body)
+      Json.fromJson[Organization](responseJson) match {
+        case JsSuccess(organization, _) => organization
+        case error: JsError => throw new IOException(s"Failed to get organization $error $responseJson")
+      }
+    } else {
+      throw new IOException("Failed to get organization , status code " + response.code)
+    }
+  }
+
+  def deleteOrganization(orgName:String): Boolean ={
+    val response = this.client.http.delete(url+s"/v1/organizations/${orgName}")
+    if (response.code == 204) {
+      true
+    } else {
+      throw new IOException("Failed to delete organization , status code " + response.code)
+    }
+  }
+
   def addOrganizationMember(orgName: String, userName:String):String = {
     val path = url + "/v1/organizations/" + orgName + "/members/" + userName
     val response = this.client.http.put(path, null)

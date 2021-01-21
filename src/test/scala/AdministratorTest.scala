@@ -3,7 +3,8 @@ import com.algorithmia.algo.Administrator
 import com.algorithmia.handler.{Organization, User}
 import org.specs2.mutable._
 
-object AdministratorTest extends Specification {
+class AdministratorTest extends Specification {
+  sequential
   val keys: String = System.getenv("ALGORITHMIA_ADMIN_API_KEY")
   val client = Algorithmia.client(keys)
   val admin = new Administrator(client)
@@ -18,15 +19,43 @@ object AdministratorTest extends Specification {
   }
 
   "Administrator can create organization" should {
-    "jakeOrg_${randomId}" in {
-      val org = Organization(orgName, s"jakeOrg_Label_${randomId}", "Jake_org", "jake_org@algotest.com", "organization", "")
-      admin.createOrganization(org) must be
+    s"jakeOrg_${randomId}" in {
+      val org = Organization(
+        orgName,
+        s"jakeOrg_Label_${randomId}",
+        "Jake_org",
+        s"${randomId}@algotest.com",
+        s"${randomId}",
+        "external_admin_group_id",
+        "external_admin_group_id",
+        "organization",
+        "", "3d40e3b0-d82a-11ea-9a3c-0ee5e2d35097"
+      )
+      val newOrgName = admin.createOrganization(org)
+      org.orgName mustEqual (newOrgName)
+    }
+  }
+
+  "Administrator can update organization" should {
+    s"jakeOrg_${randomId}" in {
+      val updatedOrg = Organization(
+        s"updated_${orgName}",
+        s"jakeOrg_NewLabel_${randomId}",
+        "Jake_org_Updated",
+        s"${randomId}@algotest.com",
+        s"${randomId}",
+        "external_admin_group_id",
+        "external_admin_group_id",
+        "organization",
+        "", "3d40e3b0-d82a-11ea-9a3c-0ee5e2d35097"
+      )
+      admin.updateOrganization(orgName, updatedOrg) mustEqual true
     }
   }
 
   "Administrator can create users" should {
     s"jake_${randomId}" in {
-      val user = User(userName, s"jake_${randomId}@algo.test", "Jake_org",  "user", "")
+      val user = User(userName, s"jake_${randomId}@algo.test", "Jake_org", "user", "")
       admin.createUser(user) must be
     }
   }
@@ -37,4 +66,15 @@ object AdministratorTest extends Specification {
     }
   }
 
+  "Administrator can get organization" should {
+    "" in {
+      admin.getOrganization(orgName) must be
+    }
+  }
+
+  "Administrator can delete organization" should {
+    "" in {
+      admin.deleteOrganization(orgName) mustEqual true
+    }
+  }
 }
