@@ -48,6 +48,7 @@ class HttpClient(apiKey: Option[String]) {
   def put(url: String, data: Array[Byte]): HttpResponse[String] = {
     httpRequest(url)
       .put(data)
+      .header("Content-Type", "application/json")
       .header("Accept", "application/json")
       .asString
   }
