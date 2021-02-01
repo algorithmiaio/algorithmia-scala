@@ -1,7 +1,7 @@
 package com.algorithmia.algo
 import java.io.IOException
 
-import com.algorithmia.handler.{Organization, User}
+import com.algorithmia.handler.{Organization, User, OrganizationType}
 import com.algorithmia.{AlgorithmiaClient, AlgorithmiaConf}
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
@@ -11,7 +11,7 @@ class Administrator(client: AlgorithmiaClient){
 
   def createUser(user:User):String ={
     val input = Json.toJson(user)
-    val response = client.http.post(url+"/v1/users", input.toString)
+    val response = client.http.post(url + "/v1/users", input.toString)
     if (response.code == 200) {
       val responseJson = Json.parse(response.body)
       Json.fromJson[User](responseJson) match {
@@ -23,9 +23,9 @@ class Administrator(client: AlgorithmiaClient){
     }
   }
 
-  def createOrganization(org:Organization):String ={
+  def createOrganization(org: Organization): String = {
     val input = Json.toJson(org)
-    val response = this.client.http.post(url+"/v1/organizations", input.toString)
+    val response = this.client.http.post(url + "/v1/organizations", input.toString)
     if (response.code == 200) {
       val responseJson = Json.parse(response.body)
       Json.fromJson[Organization](responseJson) match {
@@ -37,18 +37,18 @@ class Administrator(client: AlgorithmiaClient){
     }
   }
 
-  def updateOrganization(orgName:String, org:Organization):Boolean ={
+  def updateOrganization(orgName: String, org: Organization): Boolean = {
     val input = Json.toJson(org)
-    val response = this.client.http.put(url+s"/v1/organizations/${orgName}", input.toString.getBytes)
-      if (response.code == 204 ) {
-        true
+    val response = this.client.http.put(url + s"/v1/organizations/${orgName}", input.toString.getBytes)
+    if (response.code == 204) {
+      true
     } else {
       throw new IOException("Failed to update organization , status code " + response.code)
     }
   }
 
-  def getOrganization(orgName:String):Organization ={
-    val response = this.client.http.get(url+s"/v1/organizations/${orgName}")
+  def getOrganization(orgName: String): Organization = {
+    val response = this.client.http.get(url + s"/v1/organizations/${orgName}")
     if (response.code == 200) {
       val responseJson = Json.parse(response.body)
       Json.fromJson[Organization](responseJson) match {
@@ -60,8 +60,18 @@ class Administrator(client: AlgorithmiaClient){
     }
   }
 
-  def deleteOrganization(orgName:String): Boolean ={
-    val response = this.client.http.delete(url+s"/v1/organizations/${orgName}")
+  def getOrganizationTypeId(orgType: String): String = {
+    val response = this.client.http.get(url + s"/v1/organization/types")
+    if (response.code == 200) {
+      val orgTypes: List[OrganizationType] = Json.parse(response.body).as[List[OrganizationType]]
+      orgTypes.filter(o => o.name == orgType).head.id.toString
+    } else {
+      throw new IOException("Failed to get organization types ")
+    }
+  }
+
+  def deleteOrganization(orgName: String): Boolean = {
+    val response = this.client.http.delete(url + s"/v1/organizations/${orgName}")
     if (response.code == 204) {
       true
     } else {
@@ -69,7 +79,7 @@ class Administrator(client: AlgorithmiaClient){
     }
   }
 
-  def addOrganizationMember(orgName: String, userName:String):String = {
+  def addOrganizationMember(orgName: String, userName: String): String = {
     val path = url + "/v1/organizations/" + orgName + "/members/" + userName
     val response = this.client.http.put(path, null)
     if (response.code == 200) {

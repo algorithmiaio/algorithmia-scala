@@ -45,6 +45,20 @@ object Organization {
 
 }
 
+case class OrganizationType(id: String, name: String)
+
+object OrganizationType {
+  implicit val organizationTypeReads: Reads[OrganizationType] = (
+    (JsPath \ "id").read[String] and
+      (JsPath \ "name").read[String]
+  )(OrganizationType.apply _)
+
+  implicit val organizationTypeWrites: Writes[OrganizationType] = (
+    (JsPath \ "id").write[String] and
+      (JsPath \ "name").write[String]
+  )(unlift(OrganizationType.unapply))
+}
+
 case class User(userName: String, email: String, fullName: String, resourceType: String, selfLink: String)
 
 object User {
