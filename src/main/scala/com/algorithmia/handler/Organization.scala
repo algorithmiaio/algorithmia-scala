@@ -43,6 +43,10 @@ object Organization {
       (JsPath \ "type_id").write[String]
   )(unlift(Organization.unapply))
 
+  def updateTypeIdToUUID(org: Organization, typeUUId: String): Organization = {
+    org.copy(typeId = typeUUId)
+  }
+
 }
 
 case class OrganizationType(id: String, name: String)
