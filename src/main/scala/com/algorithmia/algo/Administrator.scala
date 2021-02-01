@@ -9,7 +9,7 @@ class Administrator(client: AlgorithmiaClient){
   val url: String = if(AlgorithmiaConf.apiAddress.equalsIgnoreCase("https://api.algorithmia.com"))
     "http://localhost:9000" else AlgorithmiaConf.apiAddress
 
-  def createUser(user:User):String ={
+  def createUser(user: User): String = {
     val input = Json.toJson(user)
     val response = client.http.post(url + "/v1/users", input.toString)
     if (response.code == 200) {
@@ -24,7 +24,9 @@ class Administrator(client: AlgorithmiaClient){
   }
 
   def createOrganization(org: Organization): String = {
-    val input = Json.toJson(org)
+    val typeUUid = getOrganizationTypeId(org.typeId)
+    val newOrg = Organization.updateTypeIdToUUID(org, typeUUid)
+    val input = Json.toJson(newOrg)
     val response = this.client.http.post(url + "/v1/organizations", input.toString)
     if (response.code == 200) {
       val responseJson = Json.parse(response.body)
@@ -38,7 +40,9 @@ class Administrator(client: AlgorithmiaClient){
   }
 
   def updateOrganization(orgName: String, org: Organization): Boolean = {
-    val input = Json.toJson(org)
+    val typeUUid = getOrganizationTypeId(org.typeId)
+    val newOrg = Organization.updateTypeIdToUUID(org, typeUUid)
+    val input = Json.toJson(newOrg)
     val response = this.client.http.put(url + s"/v1/organizations/${orgName}", input.toString.getBytes)
     if (response.code == 204) {
       true

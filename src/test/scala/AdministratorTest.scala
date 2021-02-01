@@ -11,7 +11,6 @@ class AdministratorTest extends Specification {
   val randomId = System.currentTimeMillis();
   val orgName = s"jakeOrg_${randomId}"
   val userName = s"jake_${randomId}"
-  var orgTypeId: String = admin.getOrganizationTypeId("basic")
 
   "api key" should {
     "define environment variable Administrator" in {
@@ -31,7 +30,7 @@ class AdministratorTest extends Specification {
         "external_admin_group_id",
         "organization",
         "",
-        orgTypeId
+        "basic"
       )
       val newOrgName = admin.createOrganization(org)
       org.orgName mustEqual (newOrgName)
@@ -50,7 +49,7 @@ class AdministratorTest extends Specification {
         "external_admin_group_id",
         "organization",
         "",
-        orgTypeId
+        "basic"
       )
       admin.updateOrganization(orgName, updatedOrg) mustEqual true
     }
