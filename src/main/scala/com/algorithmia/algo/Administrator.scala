@@ -66,7 +66,7 @@ class Administrator(client: AlgorithmiaClient){
       val orgTypes: List[OrganizationType] = Json.parse(response.body).as[List[OrganizationType]]
       orgTypes.filter(o => o.name == orgType).head.id.toString
     } else {
-      throw new IOException("Failed to get organization types, status code " + response.code)
+      throw new IOException("Failed to get organization types ")
     }
   }
 
