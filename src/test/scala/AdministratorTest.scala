@@ -11,6 +11,7 @@ class AdministratorTest extends Specification {
   val randomId = System.currentTimeMillis();
   val orgName = s"jakeOrg_${randomId}"
   val userName = s"jake_${randomId}"
+  var orgTypeId: String = admin.getOrganizationTypeId("basic")
 
   "api key" should {
     "define environment variable Administrator" in {
@@ -29,7 +30,8 @@ class AdministratorTest extends Specification {
         "external_admin_group_id",
         "external_admin_group_id",
         "organization",
-        "", "3d40e3b0-d82a-11ea-9a3c-0ee5e2d35097"
+        "",
+        orgTypeId
       )
       val newOrgName = admin.createOrganization(org)
       org.orgName mustEqual (newOrgName)
@@ -47,7 +49,8 @@ class AdministratorTest extends Specification {
         "external_admin_group_id",
         "external_admin_group_id",
         "organization",
-        "", "3d40e3b0-d82a-11ea-9a3c-0ee5e2d35097"
+        "",
+        orgTypeId
       )
       admin.updateOrganization(orgName, updatedOrg) mustEqual true
     }
@@ -77,4 +80,5 @@ class AdministratorTest extends Specification {
       admin.deleteOrganization(orgName) mustEqual true
     }
   }
+
 }
