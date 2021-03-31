@@ -8,6 +8,7 @@ case class Organization(
     orgLabel: String,
     orgContactName: String,
     orgEmail: String,
+    orgUrl: String,
     external_id: String = "",
     external_admin_group: String = "",
     external_member_group: String = "",
@@ -22,6 +23,7 @@ object Organization {
       (JsPath \ "org_label").read[String] and
       (JsPath \ "org_contact_name").read[String] and
       (JsPath \ "org_email").read[String] and
+      (JsPath \ "org_url").read[String] and
       (JsPath \ "external_id").read[String] and
       (JsPath \ "external_admin_group").read[String] and
       (JsPath \ "external_member_group").read[String] and
@@ -35,6 +37,7 @@ object Organization {
       (JsPath \ "org_label").write[String] and
       (JsPath \ "org_contact_name").write[String] and
       (JsPath \ "org_email").write[String] and
+      (JsPath \ "org_url").write[String] and
       (JsPath \ "external_id").write[String] and
       (JsPath \ "external_admin_group").write[String] and
       (JsPath \ "external_member_group").write[String] and
